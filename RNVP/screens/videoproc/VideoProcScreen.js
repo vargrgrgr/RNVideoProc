@@ -9,7 +9,7 @@ const maxTrimDuration = 60000;
 const minimumTrimDuration = 1000;
 const initialTotalDuration = 10000
 const initialLeftHandlePosition = 0;
-const initialRightHandlePosition = 10000;
+const initialRightHandlePosition = 5000;
 const scrubInterval = 50;
 const initialTrimUnitSize = 5000;
 
@@ -94,30 +94,37 @@ const initialTrimUnitSize = 5000;
   }
   onHandleChange = ({ leftPosition, rightPosition }) => {
     if(this.state.trimFix==true){
-      fixedleftposition = this.fixTrimHandle(leftPosition);
-      fixedrightposition = this.fixTrimHandle(rightPosition);
-      console.log("position fixed."+fixedleftposition+","+fixedrightposition);
-      this.setState({ trimmerRightHandlePosition: fixedrightposition });
-      this.setState({ trimmerLeftHandlePosition: fixedleftposition });
+      this.fixTrimHandle(leftPosition, rightPosition);
       this.setState({startT: this.state.trimmerLeftHandlePosition});
       this.forceUpdate();
     }else{
       this.setState({ trimmerRightHandlePosition: rightPosition });
       this.setState({ trimmerLeftHandlePosition: leftPosition });
+      this.setState({startT: this.state.trimmerLeftHandlePosition});
+      this.forceUpdate();
     }
   }
 
-  
-  fixTrimHandle = (position) => {
-    if(position<=0){
-      return 0;
+  //혹시 제스쳐핸들러가 핸들 위치를 잘못 설정했을 경우 fix
+  fixTrimHandle = (leftposition, rightposition) => {
+    leftval = Math.abs(leftposition-this.state.trimmerLeftHandlePosition);
+    rightval = Math.abs(rightposition-this.state.trimmerRightHandlePosition);
+    if(leftval>=rightval){
+      this.setState({ trimmerLeftHandlePosition: leftposition });
+      if(leftposition+this.state.TrimUnitSize<=this.state.videoLength){
+        this.setState({ trimmerRightHandlePosition: leftposition+this.state.TrimUnitSize });
+      }else{
+        this.setState({ trimmerLeftHandlePosition: (leftposition+this.state.TrimUnitSize-this.state.videoLength) });
+        this.setState({ trimmerRightHandlePosition: this.state.trimmerLeftHandlePosition+this.state.TrimUnitSize });
+      }
+    }else{
+      this.setState({ trimmerRightHandlePosition: rightposition });
+      this.setState({ trimmerLeftHandlePosition: rightposition-this.state.TrimUnitSize });
+      if(rightposition-this.state.TrimUnitSize<0){
+        this.setState({ trimmerLeftHandlePosition: 0 });
+        this.setState({ trimmerRightHandlePosition: this.state.TrimUnitSize });
+      }
     }
-    fixedPosition = Math.round(position/this.state.TrimUnitSize);
-    //console.log(fixedPosition);
-    if(fixedPosition*this.state.TrimUnitSize>=this.state.videoLength){
-      return this.state.videoLength;
-    }
-    return fixedPosition*this.state.TrimUnitSize;
   }
   onChanged (text) {
     this.setState({
@@ -207,7 +214,7 @@ const initialTrimUnitSize = 5000;
                         maxTrimDuration={maxTrimDuration}
                         maximumZoomLevel={200}
                         zoomMultiplier={20}
-                        initialZoomValue={2}
+                        initialZoomValue={0.8}
                         scaleInOnInit={true}
                         tintColor="#f638dc"
                         markerColor="#5a3d5c"
