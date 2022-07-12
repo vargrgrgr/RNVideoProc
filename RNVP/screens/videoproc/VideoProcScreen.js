@@ -11,11 +11,10 @@ const initialTotalDuration = 30000
 const initialLeftHandlePosition = 0;
 const initialRightHandlePosition = 10000;
 const scrubInterval = 50;
-const initialTrimUnitSize = 5000;
+const initialTrimUnitSize = 1000;
 
 
- class VideoProcScreen extends Component {
-   
+ class VideoProcScreen extends Component { 
   state = {
     playing: false,
     trimmerLeftHandlePosition: initialLeftHandlePosition,
@@ -28,7 +27,9 @@ const initialTrimUnitSize = 5000;
     rightnumber: 10000,
     totalDuration: initialTotalDuration,
     TrimUnitSize: initialTrimUnitSize,
-    trimFix: true
+    trimFix: true,
+    startVid: 0,
+    endVid: this.props.route.params.video_length*1000,
   }
   playScrubber = () => {
     this.setState({ playing: true });
@@ -66,6 +67,7 @@ const initialTrimUnitSize = 5000;
       this.videoPlayerRef.trim(options)
           .then((newSource) => console.log(newSource))
           .catch(console.warn);
+      
   }
   compressVideo = () => {
       const options = {
@@ -99,8 +101,11 @@ const initialTrimUnitSize = 5000;
       fixedleftposition = this.fixTrimHandle(leftPosition);
       fixedrightposition = this.fixTrimHandle(rightPosition);
       console.log("position fixed."+fixedleftposition+","+fixedrightposition);
-      this.setState({ trimmerRightHandlePosition: fixedrightposition });
-      this.setState({ trimmerLeftHandlePosition: fixedleftposition });
+      this.setState({ trimmerRightHandlePosition: fixedrightposition});
+      this.setState({ trimmerLeftHandlePosition: fixedleftposition});
+      //this.setState({ endVid: fixedrightposition});
+      this.setState({ startVid: fixedleftposition/1000}); 
+      this.forceUpdate();
     }else{
       this.setState({ trimmerRightHandlePosition: rightPosition });
       this.setState({ trimmerLeftHandlePosition: leftPosition });
@@ -112,7 +117,6 @@ const initialTrimUnitSize = 5000;
   
   fixTrimHandle = (position) => {
     fixedPosition = Math.round(position/this.state.TrimUnitSize);
-    //console.log(fixedPosition);
     if(fixedPosition*this.state.TrimUnitSize>=this.state.videoLength){
       return this.state.videoLength;
     }
@@ -132,12 +136,13 @@ const initialTrimUnitSize = 5000;
   }
     
   render(){
-    console.log(this.state.scrubberPosition);
+    console.log(this.state.startVid);
     const {
       trimmerLeftHandlePosition,
       trimmerRightHandlePosition,
       scrubberPosition,
       playing,
+      startVid,
       currentT,
       leftnumber,
       rightnumber,
@@ -157,11 +162,11 @@ const initialTrimUnitSize = 5000;
                 }}>    
                     <VideoPlayer
                         ref={ref => this.videoPlayerRef = ref}
-                        startTime={0}  // seconds
+                        startTime={startVid}  // seconds
                         play={playing}     // default false
                         replay={false}   // should player play video again if it's ended
                         rotate={false}   // use this prop to rotate video if it captured in landscape mode iOS only
-                        currentTime={scrubberPosition}
+                        currentTime={scrubberPosition/1000}
                         source={this.state.videoSource}
                         playerWidth={Dimensions.get('window').width * PixelRatio.get()/3-40}// iOS only 
                         resizeMode={VideoPlayer.Constants.resizeMode.CONTAIN}
