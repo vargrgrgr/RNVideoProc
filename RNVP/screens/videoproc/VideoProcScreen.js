@@ -161,7 +161,7 @@ const initialTrimUnitSize = 5000;
             justifyContent: 'space-between'
           }}>
                 <View style= {{
-                    padding: 20,
+                    
                     flex: 0.8
                 }}>    
                     <VideoPlayer
@@ -172,8 +172,9 @@ const initialTrimUnitSize = 5000;
                         rotate={false}   // use this prop to rotate video if it captured in landscape mode iOS only
                         currentTime={scrubberPosition/1000}
                         source={videoSource}
-                        playerWidth={Dimensions.get('window').width * PixelRatio.get()/3-40}// iOS only 
-                        resizeMode={VideoPlayer.Constants.resizeMode.CONTAIN}
+                        playerWidth={Dimensions.get('window').width * PixelRatio.get()/3}// iOS only 
+                        playerHeight={Dimensions.get('window').height * PixelRatio.get()/3}
+                        resizeMode={VideoPlayer.Constants.resizeMode.COVER}
                         onChange={({ nativeEvent }) => console.log({ nativeEvent })} // get Current time on every second
                     />
                 </View>
