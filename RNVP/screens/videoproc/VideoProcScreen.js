@@ -102,8 +102,8 @@ const initialTrimUnitSize = 5000;
       this.setState({ trimmerRightHandlePosition: fixedrightposition });
       this.setState({ trimmerLeftHandlePosition: fixedleftposition });
     }else{
-      this.setState({ trimmerRightHandlePosition: fixedrightposition });
-      this.setState({ trimmerLeftHandlePosition: fixedleftposition });
+      this.setState({ trimmerRightHandlePosition: rightPosition });
+      this.setState({ trimmerLeftHandlePosition: leftPosition });
     }
  //   this.onChanged(leftPosition/1000);
  //  this.onChanged2(rightPosition/1000);
@@ -112,9 +112,9 @@ const initialTrimUnitSize = 5000;
   
   fixTrimHandle = (position) => {
     fixedPosition = Math.round(position/this.state.TrimUnitSize);
-    console.log(fixedPosition);
-    if(fixedPosition*this.state.TrimUnitSize>this.state.trimmerRightHandlePosition){
-      fixedPosition=fixedPosition-1;
+    //console.log(fixedPosition);
+    if(fixedPosition*this.state.TrimUnitSize>=this.state.videoLength){
+      return this.state.videoLength;
     }
     return fixedPosition*this.state.TrimUnitSize;
   }
