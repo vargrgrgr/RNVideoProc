@@ -36,13 +36,6 @@ const initialTrimUnitSize = 5000;
     this.setState({ playing: true });
     this.scrubberInterval = setInterval(() => {
       this.setState({ scrubberPosition: this.state.scrubberPosition + scrubInterval })
-
-      if(this.state.scrubberPosition+ scrubInterval>this.state.trimmerRightHandlePosition){
-        clearInterval(this.scrubberInterval)
-        this.setState({ playing: false });
-        this.setState({ scrubberPosition: this.state.trimmerLeftHandlePosition });
-      }
-
     }, scrubInterval)
   }
 
@@ -96,12 +89,10 @@ const initialTrimUnitSize = 5000;
     if(this.state.trimFix==true){
       this.fixTrimHandle(leftPosition, rightPosition);
       this.setState({startT: this.state.trimmerLeftHandlePosition});
-      this.forceUpdate();
     }else{
       this.setState({ trimmerRightHandlePosition: rightPosition });
       this.setState({ trimmerLeftHandlePosition: leftPosition });
       this.setState({startT: this.state.trimmerLeftHandlePosition});
-      this.forceUpdate();
     }
   }
 
@@ -117,6 +108,7 @@ const initialTrimUnitSize = 5000;
         this.setState({ trimmerLeftHandlePosition: (leftposition+this.state.TrimUnitSize-this.state.videoLength) });
         this.setState({ trimmerRightHandlePosition: this.state.trimmerLeftHandlePosition+this.state.TrimUnitSize });
       }
+      this.setState({ scrubberPosition: this.state.trimmerLeftHandlePosition })
     }else{
       this.setState({ trimmerRightHandlePosition: rightposition });
       this.setState({ trimmerLeftHandlePosition: rightposition-this.state.TrimUnitSize });
@@ -124,6 +116,7 @@ const initialTrimUnitSize = 5000;
         this.setState({ trimmerLeftHandlePosition: 0 });
         this.setState({ trimmerRightHandlePosition: this.state.TrimUnitSize });
       }
+      this.setState({ scrubberPosition: this.state.trimmerLeftHandlePosition })
     }
   }
   onChanged (text) {
@@ -140,7 +133,6 @@ const initialTrimUnitSize = 5000;
   }
     
   render(){
-    console.log(this.state.scrubberPosition);
     const {
       trimmerLeftHandlePosition,
       trimmerRightHandlePosition,
