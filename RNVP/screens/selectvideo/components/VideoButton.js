@@ -1,12 +1,10 @@
 import React from 'react';
 import { View, Button, Platform, StyleSheet } from 'react-native';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
-import { useDispatch } from 'react-redux';
 import VideoProc from '../../videoproc/VideoProcScreen';
 
 
 export default function SelectFile () {
-  const dispatch = useDispatch();
   const recordVideo = () => {
     const options = {
       title: '영상 녹화',

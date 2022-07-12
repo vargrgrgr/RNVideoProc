@@ -3,10 +3,7 @@ import {
   View, Button, StyleSheet,
 } from 'react-native';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker'
-import { useDispatch } from 'react-redux';
-import { videoProcess } from '../../store/redux-store';
 function SelectVideoScreen ({navigation}) {
-  const dispatch = useDispatch();
   console.log("SVS");
   const recordVideo = () => {
     const options = {
