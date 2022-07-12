@@ -6,12 +6,12 @@ import {VideoPlayer} from '../../RNVP_module';
 import Trimmer from 'react-native-trimmer'
 
 const maxTrimDuration = 60000;
-const minimumTrimDuration = 4999;
-const initialTotalDuration = 30000
+const minimumTrimDuration = 1000;
+const initialTotalDuration = 10000
 const initialLeftHandlePosition = 0;
 const initialRightHandlePosition = 10000;
 const scrubInterval = 50;
-const initialTrimUnitSize = 5000;
+const initialTrimUnitSize = 1000;
 
 
  class VideoProcScreen extends Component {
@@ -24,6 +24,7 @@ const initialTrimUnitSize = 5000;
     videoLength: this.props.route.params.video_length*1000,
     scrubberPosition: 0,
     currentT: 0,
+    startT: 0,
     leftnumber: 0,
     rightnumber: 10000,
     totalDuration: initialTotalDuration,
@@ -52,16 +53,11 @@ const initialTrimUnitSize = 5000;
   onScrubbingComplete = (newValue) => {
     this.setState({ playing: false, scrubberPosition: newValue })
   }
-  AsyncVideo = (newTime) => {
-    this.setState({ currentT: newTime});
-  }
   trimVideo = () => {
       const options = {
           startTime: this.state.trimmerLeftHandlePosition/1000,
           endTime: this.state.trimmerRightHandlePosition/1000,
-          quality: VideoPlayer.Constants.quality.QUALITY_1280x720, // iOS only
           saveToCameraRoll: true, // default is false // iOS only
-          saveWithCurrentDate: true, // default is false // iOS only
       };
       this.videoPlayerRef.trim(options)
           .then((newSource) => console.log(newSource))
@@ -101,16 +97,19 @@ const initialTrimUnitSize = 5000;
       console.log("position fixed."+fixedleftposition+","+fixedrightposition);
       this.setState({ trimmerRightHandlePosition: fixedrightposition });
       this.setState({ trimmerLeftHandlePosition: fixedleftposition });
+      this.setState({startT: this.state.trimmerLeftHandlePosition});
+      this.forceUpdate();
     }else{
       this.setState({ trimmerRightHandlePosition: rightPosition });
       this.setState({ trimmerLeftHandlePosition: leftPosition });
     }
- //   this.onChanged(leftPosition/1000);
- //  this.onChanged2(rightPosition/1000);
   }
 
   
   fixTrimHandle = (position) => {
+    if(position<=0){
+      return 0;
+    }
     fixedPosition = Math.round(position/this.state.TrimUnitSize);
     //console.log(fixedPosition);
     if(fixedPosition*this.state.TrimUnitSize>=this.state.videoLength){
@@ -143,6 +142,7 @@ const initialTrimUnitSize = 5000;
       rightnumber,
       videoSource,
       videoLength,
+      startT,
       trimfix,
     } = this.state;
       return (
@@ -157,12 +157,12 @@ const initialTrimUnitSize = 5000;
                 }}>    
                     <VideoPlayer
                         ref={ref => this.videoPlayerRef = ref}
-                        startTime={0}  // seconds
+                        startTime={this.state.startT/1000}  // seconds
                         play={playing}     // default false
                         replay={false}   // should player play video again if it's ended
                         rotate={false}   // use this prop to rotate video if it captured in landscape mode iOS only
-                        currentTime={scrubberPosition}
-                        source={this.state.videoSource}
+                        currentTime={scrubberPosition/1000}
+                        source={videoSource}
                         playerWidth={Dimensions.get('window').width * PixelRatio.get()/3-40}// iOS only 
                         resizeMode={VideoPlayer.Constants.resizeMode.CONTAIN}
                         onChange={({ nativeEvent }) => console.log({ nativeEvent })} // get Current time on every second
