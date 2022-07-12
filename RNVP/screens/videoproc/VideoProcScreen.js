@@ -11,7 +11,7 @@ const initialTotalDuration = 10000
 const initialLeftHandlePosition = 0;
 const initialRightHandlePosition = 10000;
 const scrubInterval = 50;
-const initialTrimUnitSize = 1000;
+const initialTrimUnitSize = 5000;
 
 
  class VideoProcScreen extends Component {
@@ -31,6 +31,7 @@ const initialTrimUnitSize = 1000;
     TrimUnitSize: initialTrimUnitSize,
     trimFix: true
   }
+
   playScrubber = () => {
     this.setState({ playing: true });
     this.scrubberInterval = setInterval(() => {
@@ -53,6 +54,7 @@ const initialTrimUnitSize = 1000;
   onScrubbingComplete = (newValue) => {
     this.setState({ playing: false, scrubberPosition: newValue })
   }
+  
   trimVideo = () => {
       const options = {
           startTime: this.state.trimmerLeftHandlePosition/1000,
