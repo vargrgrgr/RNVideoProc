@@ -33,9 +33,15 @@ const initialTrimUnitSize = 5000;
   }
 
   playScrubber = () => {
+    this.forceUpdate();
     this.setState({ playing: true });
     this.scrubberInterval = setInterval(() => {
       this.setState({ scrubberPosition: this.state.scrubberPosition + scrubInterval })
+      if(this.state.scrubberPosition+ scrubInterval>this.state.trimmerRightHandlePosition){
+        this.setState({ playing: false });
+        clearInterval(this.scrubberInterval)
+        this.setState({ scrubberPosition: this.state.trimmerLeftHandlePosition });
+      }
     }, scrubInterval)
   }
 
@@ -88,12 +94,16 @@ const initialTrimUnitSize = 5000;
   onHandleChange = ({ leftPosition, rightPosition }) => {
     if(this.state.trimFix==true){
       this.fixTrimHandle(leftPosition, rightPosition);
-      this.setState({startT: this.state.trimmerLeftHandlePosition});
     }else{
       this.setState({ trimmerRightHandlePosition: rightPosition });
       this.setState({ trimmerLeftHandlePosition: leftPosition });
       this.setState({startT: this.state.trimmerLeftHandlePosition});
     }
+
+    this.pauseScrubber();
+    this.playScrubber();
+    this.pauseScrubber();
+    this.forceUpdate();
   }
 
   //혹시 제스쳐핸들러가 핸들 위치를 잘못 설정했을 경우 fix
@@ -105,20 +115,19 @@ const initialTrimUnitSize = 5000;
       if(leftposition+this.state.TrimUnitSize<=this.state.videoLength){
         this.setState({ trimmerRightHandlePosition: leftposition+this.state.TrimUnitSize });
       }else{
-        this.setState({ trimmerLeftHandlePosition: (leftposition+this.state.TrimUnitSize-this.state.videoLength) });
-        this.setState({ trimmerRightHandlePosition: this.state.trimmerLeftHandlePosition+this.state.TrimUnitSize });
+                  this.setState({ trimmerLeftHandlePosition: (leftposition+this.state.TrimUnitSize-this.state.videoLength) });
+                  this.setState({ trimmerRightHandlePosition: this.state.trimmerLeftHandlePosition+this.state.TrimUnitSize });
       }
-      this.setState({ scrubberPosition: this.state.trimmerLeftHandlePosition })
     }else{
       this.setState({ trimmerRightHandlePosition: rightposition });
       this.setState({ trimmerLeftHandlePosition: rightposition-this.state.TrimUnitSize });
       if(rightposition-this.state.TrimUnitSize<0){
         this.setState({ trimmerLeftHandlePosition: 0 });
-        this.setState({ trimmerRightHandlePosition: this.state.TrimUnitSize });
       }
-      this.setState({ scrubberPosition: this.state.trimmerLeftHandlePosition })
     }
-  }
+    this.setState({ scrubberPosition: this.state.trimmerLeftHandlePosition });
+    this.setState({startT: this.state.trimmerLeftHandlePosition});
+  } 
   onChanged (text) {
     this.setState({
         //leftnumber: text.replace(/[^0-9]/g, ''),
@@ -159,7 +168,7 @@ const initialTrimUnitSize = 5000;
                     <VideoPlayer
                         ref={ref => this.videoPlayerRef = ref}
                         startTime={this.state.startT/1000}  // seconds
-                        play={playing}     // default false
+                        play={false}     // default false
                         replay={false}   // should player play video again if it's ended
                         rotate={false}   // use this prop to rotate video if it captured in landscape mode iOS only
                         currentTime={scrubberPosition/1000}
