@@ -3,7 +3,7 @@ import {
   View, Button, Dimensions, PixelRatio, TextInput, Text
 } from 'react-native';
 import {VideoPlayer} from '../../RNVP_module';
-import Trimmer from 'react-native-trimmer'
+import Trimmer from '../../react-native-trimmer'
 
 const maxTrimDuration = 60000;
 const minimumTrimDuration = 1000;

@@ -759,7 +759,7 @@ static CVReturn renderCallback(CVDisplayLinkRef displayLink,
         {
             NSInteger indexOfObject = [targets indexOfObject:currentTarget];
             NSInteger targetTextureIndex = [[targetTextureIndices objectAtIndex:indexOfObject] integerValue];
-            [currentTarget newFrameReadyAtTime:currentSampleTime atIndex:targetTextureIndex];
+            [currentTarget newFrameReadyAtTime:currentSampleTimegpuMovie atIndex:targetTextureIndex];
         }
         CVPixelBufferUnlockBaseAddress(movieFrame, 0);
     }
