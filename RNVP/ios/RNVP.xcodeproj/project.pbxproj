@@ -14,8 +14,10 @@
 		18598455287AB4FB00CA9BE9 /* GPUImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18598454287AB4DE00CA9BE9 /* GPUImage.framework */; };
 		18598456287AB4FB00CA9BE9 /* GPUImage.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 18598454287AB4DE00CA9BE9 /* GPUImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		18598457287AB50200CA9BE9 /* libGPUImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 18598452287AB4DE00CA9BE9 /* libGPUImage.a */; };
-		1884523D2881518800B4F8C6 /* VideoPlayerViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 188452392881518800B4F8C6 /* VideoPlayerViewManager.m */; };
-		1884523E2881518800B4F8C6 /* VideoPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1884523C2881518800B4F8C6 /* VideoPlayerView.m */; };
+		1884543B288163F700B4F8C6 /* FFVideoDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 18845435288163F600B4F8C6 /* FFVideoDecoder.m */; };
+		1884543C288163F700B4F8C6 /* FFDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 18845437288163F700B4F8C6 /* FFDecoder.m */; };
+		1884543D288163F700B4F8C6 /* FFPlay.m in Sources */ = {isa = PBXBuildFile; fileRef = 18845438288163F700B4F8C6 /* FFPlay.m */; };
+		1884543E288163F700B4F8C6 /* FFVideoCodecSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = 1884543A288163F700B4F8C6 /* FFVideoCodecSelector.m */; };
 		18A5CBD22881215800FD4911 /* RNVideoProcessingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A5CBB92881215800FD4911 /* RNVideoProcessingManager.swift */; };
 		18A5CBD72881215800FD4911 /* RNVideoProcessingBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A5CBC12881215800FD4911 /* RNVideoProcessingBridge.m */; };
 		18A5CBD82881215800FD4911 /* RNVideoPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A5CBC22881215800FD4911 /* RNVideoPlayer.swift */; };
@@ -97,10 +99,14 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = RNVP/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = RNVP/main.m; sourceTree = "<group>"; };
 		1859844B287AB4DE00CA9BE9 /* GPUImage.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GPUImage.xcodeproj; path = ../RNVP_module/ios/GPUImage/framework/GPUImage.xcodeproj; sourceTree = "<group>"; };
-		188452392881518800B4F8C6 /* VideoPlayerViewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoPlayerViewManager.m; sourceTree = "<group>"; };
-		1884523A2881518800B4F8C6 /* VideoPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoPlayerView.h; sourceTree = "<group>"; };
-		1884523B2881518800B4F8C6 /* VideoPlayerViewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoPlayerViewManager.h; sourceTree = "<group>"; };
-		1884523C2881518800B4F8C6 /* VideoPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoPlayerView.m; sourceTree = "<group>"; };
+		18845433288163F600B4F8C6 /* FFPlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFPlay.h; sourceTree = "<group>"; };
+		18845434288163F600B4F8C6 /* FFVideoCodecSeletor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFVideoCodecSeletor.h; sourceTree = "<group>"; };
+		18845435288163F600B4F8C6 /* FFVideoDecoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFVideoDecoder.m; sourceTree = "<group>"; };
+		18845436288163F700B4F8C6 /* FFVideoDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFVideoDecoder.h; sourceTree = "<group>"; };
+		18845437288163F700B4F8C6 /* FFDecoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFDecoder.m; sourceTree = "<group>"; };
+		18845438288163F700B4F8C6 /* FFPlay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFPlay.m; sourceTree = "<group>"; };
+		18845439288163F700B4F8C6 /* FFDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFDecoder.h; sourceTree = "<group>"; };
+		1884543A288163F700B4F8C6 /* FFVideoCodecSelector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFVideoCodecSelector.m; sourceTree = "<group>"; };
 		18A5CBB32881215800FD4911 /* RNVideoProcessing-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "RNVideoProcessing-Bridging-Header.h"; path = "../../RNVP_module/ios/RNVideoProcessing/RNVideoProcessing-Bridging-Header.h"; sourceTree = "<group>"; };
 		18A5CBB72881215800FD4911 /* RCTSwiftBridgeModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RCTSwiftBridgeModule.h; path = ../../RNVP_module/ios/RNVideoProcessing/RCTSwiftBridgeModule.h; sourceTree = "<group>"; };
 		18A5CBB82881215800FD4911 /* RNVideoProcessing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RNVideoProcessing.h; path = ../../RNVP_module/ios/RNVideoProcessing/RNVideoProcessing.h; sourceTree = "<group>"; };
@@ -242,10 +248,14 @@
 		188452382881518800B4F8C6 /* SimpleFFmpegVP */ = {
 			isa = PBXGroup;
 			children = (
-				188452392881518800B4F8C6 /* VideoPlayerViewManager.m */,
-				1884523A2881518800B4F8C6 /* VideoPlayerView.h */,
-				1884523B2881518800B4F8C6 /* VideoPlayerViewManager.h */,
-				1884523C2881518800B4F8C6 /* VideoPlayerView.m */,
+				18845439288163F700B4F8C6 /* FFDecoder.h */,
+				18845437288163F700B4F8C6 /* FFDecoder.m */,
+				18845433288163F600B4F8C6 /* FFPlay.h */,
+				18845438288163F700B4F8C6 /* FFPlay.m */,
+				1884543A288163F700B4F8C6 /* FFVideoCodecSelector.m */,
+				18845434288163F600B4F8C6 /* FFVideoCodecSeletor.h */,
+				18845436288163F700B4F8C6 /* FFVideoDecoder.h */,
+				18845435288163F600B4F8C6 /* FFVideoDecoder.m */,
 			);
 			name = SimpleFFmpegVP;
 			path = ../SimpleFFmpegVP;
@@ -651,20 +661,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1884523D2881518800B4F8C6 /* VideoPlayerViewManager.m in Sources */,
 				18A5CBF2288121A300FD4911 /* RNTrimmerView.swift in Sources */,
 				18A5CBE92881218F00FD4911 /* AVUtilities.swift in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				1884543B288163F700B4F8C6 /* FFVideoDecoder.m in Sources */,
 				18A5CBFC288121B600FD4911 /* ICGRulerView.m in Sources */,
 				18A5CBEB2881218F00FD4911 /* RNVideoTrimmer.swift in Sources */,
+				1884543C288163F700B4F8C6 /* FFDecoder.m in Sources */,
 				18A5CBF3288121A300FD4911 /* RNTrimmerViewBridge.m in Sources */,
 				18A5CBDF2881215800FD4911 /* VideoProcessingGPUFilters.swift in Sources */,
 				18A5CBFE288121B700FD4911 /* ICGThumbView.m in Sources */,
 				18A5CBD82881215800FD4911 /* RNVideoPlayer.swift in Sources */,
 				18A5CBFD288121B700FD4911 /* ICGVideoTrimmerView.m in Sources */,
-				1884523E2881518800B4F8C6 /* VideoPlayerView.m in Sources */,
+				1884543D288163F700B4F8C6 /* FFPlay.m in Sources */,
 				18A5CBD22881215800FD4911 /* RNVideoProcessingManager.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				1884543E288163F700B4F8C6 /* FFVideoCodecSelector.m in Sources */,
 				18A5CBD72881215800FD4911 /* RNVideoProcessingBridge.m in Sources */,
 				18A5CBF4288121A300FD4911 /* RNTrimmerViewManager.swift in Sources */,
 				18A5CBEA2881218F00FD4911 /* SDAVAssetExportSession.m in Sources */,
