@@ -6,6 +6,8 @@
 import Foundation
 import AVFoundation
 import UIKit
+import GPUImage
+import avformat.h
 
 enum QUALITY_ENUM: String {
   case QUALITY_LOW = "low"
@@ -200,7 +202,24 @@ class RNVideoTrimmer: NSObject {
 
       let sourceURL = getSourceURL(source: source)
       let asset = AVAsset(url: sourceURL as URL)
-
+//---------------------FFmpeg video decode initiation----------------------
+      av_register_all();
+      var vformatContext = UnsafeMutablePointer<AVFormatContext>()?
+      if avformat_open_input(&vformatContext, source, nil, nil) != 0 {
+          print("Couldn't open file")
+          return
+      }
+      avformat_find_stream_info(vformatContext, nil)
+      var vCodec = UnsafeMutablePointer<AVCodec>()?
+      let video_stream_index : Int = av_find_best_stream(vformatContext, AVMEDIA_TYPE_VIDEO, -1, -1, &vCodec, 0) //find right video channel in file
+      var vcodecContext = UnsafeMutablePointer<AVCodecContext>()?
+      vcodecContext = avcodec_alloc_context3(nil)
+      avcodec_parameters_to_context(vcodecContext, vformatContext->streams[video_stream_index]->codecpar)
+      avcodec_open2(vcodecContext, vCodec, nil);
+     //if we need audio stream, repeat 215-219 with AVMEDIA_TYPE_AUDIO and aCodec, audiostream, acodecContext
+     //decode init done
+      
+//---------------------FFmpeg video decode initiation----------------------
       asset.loadValuesAsynchronously(forKeys: [ "exportable", "tracks" ]) {
         precondition(asset.statusOfValue(forKey: "exportable", error: nil) == .loaded)
         precondition(asset.statusOfValue(forKey: "tracks", error: nil) == .loaded)
@@ -216,11 +235,9 @@ class RNVideoTrimmer: NSObject {
         let startTime = CMTime(seconds: Double(sTime!), preferredTimescale: 1000)
         let endTime = CMTime(seconds: Double(eTime!), preferredTimescale: 1000)
         let timeRange = CMTimeRange(start: startTime, end: endTime)
-
         let composition = AVMutableComposition()
         let track = composition.addMutableTrack(withMediaType: .video, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
         let videoOrientation = self.getVideoOrientationFromAsset(asset: asset)
-
         if ( videoOrientation == .up  ) {
           var transforms: CGAffineTransform?
           transforms = track?.preferredTransform
@@ -242,7 +259,33 @@ class RNVideoTrimmer: NSObject {
           transforms = transforms?.concatenating(CGAffineTransform(rotationAngle: CGFloat(180.0 * .pi / 180)))
           track?.preferredTransform = transforms!
         }
-
+//---------------------FFmpeg trimming start----------------------
+        av_seek_frame(vformatContext, video_stream_index, timestamp_target, AVSEEK_FLAG_FRAME); //seek cutting point by time
+        // or av_seek_frame(fmt_ctx, video_stream_index, timestamp_target, AVSEEK_FLAG_ANY)
+        // try AVSEEK_FLAG_BACKWARD
+        var vFrame = UnsafeMutablePointer<AVFrame>()?
+        vFrame=av_frame_alloc()
+        var vPacket : AVPacket
+        var got_frame : Int
+        var frame_decoded : Int
+        let second_needed = endTime-startTime
+        var vStream = UnsafeMutablePointer<AVStream>()?
+        av_guess
+        let fps: Double = av_q2d(av_guess_frame_rate(vformatContext, vStream, vFrame))
+        while (av_read_frame(vformatContext, &vPacket) >= 0 && frame_decoded < second_needed * fps) {
+            if (packet.stream_index == video_stream_index) {
+                got_frame = 0;
+                ret = avcodec_decode_video2(dec_ctx, frame, &got_frame, &packet);
+                // This is old ffmpeg decode/encode API, will be deprecated later, but still working now.
+                if (got_frame) {
+                    // encode frame here
+                }
+            }
+        }
+        
+        
+        
+//---------------------FFmpeg trimming end----------------------
         do {
           try composition.insertTimeRange(timeRange, of: asset, at: CMTime.zero)
         } catch {
@@ -307,6 +350,11 @@ class RNVideoTrimmer: NSObject {
             }
         }
       }
+//-----------FFmpeg Trimming end-------------
+    vformatContext.destroy()
+    vCodec.destroy()
+    vcodecContext.destroy()
+//-----------Memory Deallocation -------------
   }
 
   @objc func boomerang(_ source: String, options: NSDictionary, callback: @escaping RCTResponseSenderBlock) {
@@ -321,7 +369,7 @@ class RNVideoTrimmer: NSObject {
     }
 
     let sourceURL = getSourceURL(source: source)
-    let firstAsset = AVAsset(url: sourceURL as URL)
+    let firstAsset =  (url: sourceURL as URL)
 
     let mixComposition = AVMutableComposition()
     let track = mixComposition.addMutableTrack(withMediaType: .video, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
