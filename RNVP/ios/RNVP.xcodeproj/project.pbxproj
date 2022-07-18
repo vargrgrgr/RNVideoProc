@@ -25,21 +25,19 @@
 		18A5CBFC288121B600FD4911 /* ICGRulerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A5CBF6288121B600FD4911 /* ICGRulerView.m */; };
 		18A5CBFD288121B700FD4911 /* ICGVideoTrimmerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A5CBF8288121B600FD4911 /* ICGVideoTrimmerView.m */; };
 		18A5CBFE288121B700FD4911 /* ICGThumbView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A5CBFB288121B600FD4911 /* ICGThumbView.m */; };
-		18A5CC012881221D00FD4911 /* FFmpeg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18A5CC002881221D00FD4911 /* FFmpeg.framework */; };
 		18A5CC042881223A00FD4911 /* libbz2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 18A5CC032881223200FD4911 /* libbz2.tbd */; };
 		18A5CC052881224200FD4911 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 18A5CC022881222C00FD4911 /* libz.tbd */; };
 		18A5CC072881225600FD4911 /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 18A5CC062881224B00FD4911 /* libiconv.tbd */; };
-		18A5CC1128812BA700FD4911 /* FFmpeg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18A5CC1028812BA700FD4911 /* FFmpeg.framework */; };
 		18A5CC1328812DDC00FD4911 /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18A5CC1228812DDC00FD4911 /* VideoToolbox.framework */; };
 		18A7786228848B1E0099C8B3 /* GPUImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18A7786128843F150099C8B3 /* GPUImage.framework */; };
+		18CC70502884CB2E00F6E5D3 /* FFmpeg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18A5CC1028812BA700FD4911 /* FFmpeg.framework */; };
+		18CC70512884CB2E00F6E5D3 /* FFmpeg.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 18A5CC1028812BA700FD4911 /* FFmpeg.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		18FCA9A92879599500996AEC /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18FCA9A52879599500996AEC /* CoreVideo.framework */; };
 		18FCA9AB2879599D00996AEC /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18FCA9AA2879599D00996AEC /* CoreMedia.framework */; };
 		18FCA9AD287959A500996AEC /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18FCA9AC287959A500996AEC /* CoreServices.framework */; };
 		18FCA9AF287959B500996AEC /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18FCA9AE287959B500996AEC /* AVFoundation.framework */; };
 		18FCA9B1287959BC00996AEC /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18FCA9B0287959BC00996AEC /* OpenGLES.framework */; };
 		18FCA9B628795A0000996AEC /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18FCA9B528795A0000996AEC /* QuartzCore.framework */; };
-		2A5734388C96A5628B73C615 /* libPods-RNVP.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7FC281B8212D2072426290BE /* libPods-RNVP.a */; };
-		40BBC919D9277F017A719334 /* libPods-RNVP-RNVPTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 06549C083C750AF3C0888EE1 /* libPods-RNVP-RNVPTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
 
@@ -68,12 +66,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		18FCA9B4287959C300996AEC /* Embed Frameworks */ = {
+		18CC70522884CB2E00F6E5D3 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				18CC70512884CB2E00F6E5D3 /* FFmpeg.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -84,7 +83,6 @@
 		00E356EE1AD99517003FC87E /* RNVPTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RNVPTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* RNVPTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNVPTests.m; sourceTree = "<group>"; };
-		06549C083C750AF3C0888EE1 /* libPods-RNVP-RNVPTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RNVP-RNVPTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07F961A680F5B00A75B9A /* RNVP.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RNVP.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = RNVP/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = RNVP/AppDelegate.m; sourceTree = "<group>"; };
@@ -124,6 +122,13 @@
 		18A5CC1228812DDC00FD4911 /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
 		18A7785828843F150099C8B3 /* GPUImage.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GPUImage.xcodeproj; path = ../RNVP_module/ios/GPUImage/framework/GPUImage.xcodeproj; sourceTree = "<group>"; };
 		18CC70442884A99200F6E5D3 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
+		18CC70532884D0B500F6E5D3 /* libavformat.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavformat.a; path = "FFmpeg-iOS/lib/libavformat.a"; sourceTree = "<group>"; };
+		18CC70542884D0B600F6E5D3 /* libavdevice.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavdevice.a; path = "FFmpeg-iOS/lib/libavdevice.a"; sourceTree = "<group>"; };
+		18CC70552884D0B600F6E5D3 /* libswresample.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libswresample.a; path = "FFmpeg-iOS/lib/libswresample.a"; sourceTree = "<group>"; };
+		18CC70562884D0B600F6E5D3 /* libavcodec.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavcodec.a; path = "FFmpeg-iOS/lib/libavcodec.a"; sourceTree = "<group>"; };
+		18CC70572884D0B600F6E5D3 /* libavutil.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavutil.a; path = "FFmpeg-iOS/lib/libavutil.a"; sourceTree = "<group>"; };
+		18CC70582884D0B600F6E5D3 /* libavfilter.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavfilter.a; path = "FFmpeg-iOS/lib/libavfilter.a"; sourceTree = "<group>"; };
+		18CC70592884D0B600F6E5D3 /* libswscale.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libswscale.a; path = "FFmpeg-iOS/lib/libswscale.a"; sourceTree = "<group>"; };
 		18FCA9A52879599500996AEC /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		18FCA9AA2879599D00996AEC /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		18FCA9AC287959A500996AEC /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
@@ -132,7 +137,6 @@
 		18FCA9B528795A0000996AEC /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		18FCA9B728795AC200996AEC /* RNVP-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RNVP-Bridging-Header.h"; sourceTree = "<group>"; };
 		2DBA763662AC500855C7BF76 /* Pods-RNVP.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNVP.debug.xcconfig"; path = "Target Support Files/Pods-RNVP/Pods-RNVP.debug.xcconfig"; sourceTree = "<group>"; };
-		7FC281B8212D2072426290BE /* libPods-RNVP.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RNVP.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = RNVP/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A4C2C5E154112C284BECE472 /* Pods-RNVP-RNVPTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNVP-RNVPTests.debug.xcconfig"; path = "Target Support Files/Pods-RNVP-RNVPTests/Pods-RNVP-RNVPTests.debug.xcconfig"; sourceTree = "<group>"; };
 		B69564F2CEDBBD6FD068C3CB /* Pods-RNVP-RNVPTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNVP-RNVPTests.release.xcconfig"; path = "Target Support Files/Pods-RNVP-RNVPTests/Pods-RNVP-RNVPTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -145,7 +149,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				40BBC919D9277F017A719334 /* libPods-RNVP-RNVPTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -156,14 +159,12 @@
 				18A7786228848B1E0099C8B3 /* GPUImage.framework in Frameworks */,
 				18A5CC1328812DDC00FD4911 /* VideoToolbox.framework in Frameworks */,
 				18FCA9B628795A0000996AEC /* QuartzCore.framework in Frameworks */,
+				18CC70502884CB2E00F6E5D3 /* FFmpeg.framework in Frameworks */,
 				18A5CC052881224200FD4911 /* libz.tbd in Frameworks */,
 				18A5CC042881223A00FD4911 /* libbz2.tbd in Frameworks */,
 				18FCA9AB2879599D00996AEC /* CoreMedia.framework in Frameworks */,
-				2A5734388C96A5628B73C615 /* libPods-RNVP.a in Frameworks */,
 				18FCA9AF287959B500996AEC /* AVFoundation.framework in Frameworks */,
-				18A5CC012881221D00FD4911 /* FFmpeg.framework in Frameworks */,
 				18FCA9A92879599500996AEC /* CoreVideo.framework in Frameworks */,
-				18A5CC1128812BA700FD4911 /* FFmpeg.framework in Frameworks */,
 				18A5CC072881225600FD4911 /* libiconv.tbd in Frameworks */,
 				18FCA9AD287959A500996AEC /* CoreServices.framework in Frameworks */,
 				18FCA9B1287959BC00996AEC /* OpenGLES.framework in Frameworks */,
@@ -193,6 +194,7 @@
 		13B07FAE1A68108700A75B9A /* RNVP */ = {
 			isa = PBXGroup;
 			children = (
+				18A5CBB92881215800FD4911 /* RNVideoProcessingManager.swift */,
 				18A5CBFF2881221D00FD4911 /* FFmpegDylibFramework */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -213,7 +215,6 @@
 				18A5CBC22881215800FD4911 /* RNVideoPlayer.swift */,
 				18A5CBB32881215800FD4911 /* RNVideoProcessing-Bridging-Header.h */,
 				18A5CBB82881215800FD4911 /* RNVideoProcessing.h */,
-				18A5CBB92881215800FD4911 /* RNVideoProcessingManager.swift */,
 				18A5CBC12881215800FD4911 /* RNVideoProcessingBridge.m */,
 				18A5CBD12881215800FD4911 /* VideoProcessingGPUFilters.swift */,
 			);
@@ -282,6 +283,13 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				18CC70562884D0B600F6E5D3 /* libavcodec.a */,
+				18CC70542884D0B600F6E5D3 /* libavdevice.a */,
+				18CC70582884D0B600F6E5D3 /* libavfilter.a */,
+				18CC70532884D0B500F6E5D3 /* libavformat.a */,
+				18CC70572884D0B600F6E5D3 /* libavutil.a */,
+				18CC70552884D0B600F6E5D3 /* libswresample.a */,
+				18CC70592884D0B600F6E5D3 /* libswscale.a */,
 				18A5CC1228812DDC00FD4911 /* VideoToolbox.framework */,
 				18A5CC1028812BA700FD4911 /* FFmpeg.framework */,
 				18A5CC062881224B00FD4911 /* libiconv.tbd */,
@@ -294,8 +302,6 @@
 				18FCA9AA2879599D00996AEC /* CoreMedia.framework */,
 				18FCA9A52879599500996AEC /* CoreVideo.framework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				7FC281B8212D2072426290BE /* libPods-RNVP.a */,
-				06549C083C750AF3C0888EE1 /* libPods-RNVP-RNVPTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -380,7 +386,7 @@
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				F81C110BC5A4A3916EDAF3E0 /* [CP] Embed Pods Frameworks */,
 				CCCABB3E70256BE7F1588F5A /* [CP] Copy Pods Resources */,
-				18FCA9B4287959C300996AEC /* Embed Frameworks */,
+				18CC70522884CB2E00F6E5D3 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -723,11 +729,12 @@
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
+					"$(SRCROOT)/**",
 					"$(PROJECT_DIR)/FFmpegDylibFramework",
 				);
 				HEADER_SEARCH_PATHS = (
-					RNVP/ios/FFmpegDylibFramework/FFmpeg.framework/Headers,
-					RNVP/ios/,
+					/FFmpegDylibFramework/FFmpeg.framework/Headers,
+					"/FFmprg-iOS/include",
 					"$(inherited)",
 					"\"${PODS_ROOT}/Headers/Public\"",
 					"\"${PODS_ROOT}/Headers/Public/CocoaAsyncSocket\"",
@@ -775,6 +782,10 @@
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/FFmpeg-iOS/lib",
 				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -799,11 +810,12 @@
 				CURRENT_PROJECT_VERSION = 1;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
+					"$(SRCROOT)/**",
 					"$(PROJECT_DIR)/FFmpegDylibFramework",
 				);
 				HEADER_SEARCH_PATHS = (
-					RNVP/ios/FFmpegDylibFramework/FFmpeg.framework/Headers,
-					RNVP/ios/,
+					/FFmpegDylibFramework/FFmpeg.framework/Headers,
+					"/FFmprg-iOS/include",
 					"$(inherited)",
 					"\"${PODS_ROOT}/Headers/Public\"",
 					"\"${PODS_ROOT}/Headers/Public/CocoaAsyncSocket\"",
@@ -852,6 +864,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/FFmpeg-iOS/lib",
+				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -869,6 +885,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -928,6 +945,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				VALIDATE_WORKSPACE = YES;
 			};
 			name = Debug;
 		};
@@ -935,6 +953,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -987,6 +1006,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
+				VALIDATE_WORKSPACE = YES;
 			};
 			name = Release;
 		};

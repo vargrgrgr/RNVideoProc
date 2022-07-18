@@ -6,8 +6,8 @@
 import Foundation
 import AVFoundation
 import UIKit
-import GPUImage
-import avformat.h
+import FFmpeg
+
 
 enum QUALITY_ENUM: String {
   case QUALITY_LOW = "low"
@@ -203,7 +203,8 @@ class RNVideoTrimmer: NSObject {
       let sourceURL = getSourceURL(source: source)
       let asset = AVAsset(url: sourceURL as URL)
 //---------------------FFmpeg video decode initiation----------------------
-      av_register_all();
+    
+
       var vformatContext = UnsafeMutablePointer<AVFormatContext>()?
       if avformat_open_input(&vformatContext, source, nil, nil) != 0 {
           print("Couldn't open file")
@@ -211,7 +212,7 @@ class RNVideoTrimmer: NSObject {
       }
       avformat_find_stream_info(vformatContext, nil)
       var vCodec = UnsafeMutablePointer<AVCodec>()?
-      let video_stream_index : Int = av_find_best_stream(vformatContext, AVMEDIA_TYPE_VIDEO, -1, -1, &vCodec, 0) //find right video channel in file
+      let video_stream_index : Int32 = av_find_best_stream(vformatContext, AVMEDIA_TYPE_VIDEO, -1, -1, &vCodec, 0) //find right video channel in file
       var vcodecContext = UnsafeMutablePointer<AVCodecContext>()?
       vcodecContext = avcodec_alloc_context3(nil)
       avcodec_parameters_to_context(vcodecContext, vformatContext->streams[video_stream_index]->codecpar)
@@ -260,24 +261,25 @@ class RNVideoTrimmer: NSObject {
           track?.preferredTransform = transforms!
         }
 //---------------------FFmpeg trimming start----------------------
+        let timestamp_target = startTime
         av_seek_frame(vformatContext, video_stream_index, timestamp_target, AVSEEK_FLAG_FRAME); //seek cutting point by time
         // or av_seek_frame(fmt_ctx, video_stream_index, timestamp_target, AVSEEK_FLAG_ANY)
         // try AVSEEK_FLAG_BACKWARD
-        var vFrame = UnsafeMutablePointer<AVFrame>()?
+        var vFrame = UnsafeMutablePointer<AVFrame>? = nil
         vFrame=av_frame_alloc()
         var vPacket : AVPacket
         var got_frame : Int
         var frame_decoded : Int
         let second_needed = endTime-startTime
-        var vStream = UnsafeMutablePointer<AVStream>()?
-        av_guess
+        var vStream = UnsafeMutablePointer<AVStream>? = nil
+        var encodeContext = UnsafeMutablePointer<AVCodecContext>()?
         let fps: Double = av_q2d(av_guess_frame_rate(vformatContext, vStream, vFrame))
         while (av_read_frame(vformatContext, &vPacket) >= 0 && frame_decoded < second_needed * fps) {
-            if (packet.stream_index == video_stream_index) {
+            if (vPacket.stream_index == video_stream_index) {
                 got_frame = 0;
-                ret = avcodec_decode_video2(dec_ctx, frame, &got_frame, &packet);
-                // This is old ffmpeg decode/encode API, will be deprecated later, but still working now.
-                if (got_frame) {
+                ret = avcodec_decode_video2(vcodecContext, vFrame, &got_frame, &vPacket);
+                // avcodec_decode_audio4  if using audio
+              if ((got_frame) != 0) {
                     // encode frame here
                 }
             }
@@ -356,7 +358,35 @@ class RNVideoTrimmer: NSObject {
     vcodecContext.destroy()
 //-----------Memory Deallocation -------------
   }
+  @objc func encode( encodeContext: UnsafePointer<AVCodecContext>, eFrame: UnsafePointer<AVFrame> , eFrame:UnsafePointer<AVFrame>, ePacket: UnsafePointer<AVPacket>,
+  *outfile: FILE )
+  {
+    var ret: Int
+      /* send the frame to the encoder */
 
+
+      // encode
+
+      ret = avcodec_send_frame(encodeContext, eFrame);
+      if (ret < 0) {
+          return 0
+      }
+      while (ret >= 0) {
+
+          ret = avcodec_receive_packet(encodeContext, ePacket)
+          if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF){}}
+            return 0
+      
+          }
+          else if (ret < 0) {
+              return 0
+          }
+          fwrite(ePacket->data, 1, ePacket->size, outfile)
+          //pkt의 메모리를 해제함
+          av_packet_unref(ePacket)
+      }
+  }
+  //-----------Mencode func -------------
   @objc func boomerang(_ source: String, options: NSDictionary, callback: @escaping RCTResponseSenderBlock) {
 
     let quality = ""
@@ -595,7 +625,7 @@ class RNVideoTrimmer: NSObject {
           }
       })
   }
-
+  
   @objc func getAssetInfo(_ source: String, callback: RCTResponseSenderBlock) {
     let sourceURL = getSourceURL(source: source)
     let asset = AVAsset(url: sourceURL)

@@ -4,8 +4,6 @@
 //
 
 #import <Foundation/Foundation.h>
-
-#import "React/RCTBridgeModule.h"
 #import "RCTSwiftBridgeModule.h"
 
 @interface RCT_EXTERN_SWIFT_MODULE(RNVideoTrimmer, NSObject)
