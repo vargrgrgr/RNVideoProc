@@ -205,17 +205,22 @@ class RNVideoTrimmer: NSObject {
 //---------------------FFmpeg video decode initiation----------------------
     
 
-      var vformatContext = UnsafeMutablePointer<AVFormatContext>()?
+      var vformatContext: UnsafeMutablePointer<AVFormatContext>?
+      vformatContext = nil
       if avformat_open_input(&vformatContext, source, nil, nil) != 0 {
           print("Couldn't open file")
           return
       }
       avformat_find_stream_info(vformatContext, nil)
-      var vCodec = UnsafeMutablePointer<AVCodec>()?
+      var vCodec: UnsafeMutablePointer<AVCodec>?
+      vCodec = nil
       let video_stream_index : Int32 = av_find_best_stream(vformatContext, AVMEDIA_TYPE_VIDEO, -1, -1, &vCodec, 0) //find right video channel in file
-      var vcodecContext = UnsafeMutablePointer<AVCodecContext>()?
+      var vcodecContext: UnsafeMutablePointer<AVCodecContext>?
+      vcodecContext=nil
       vcodecContext = avcodec_alloc_context3(nil)
-      avcodec_parameters_to_context(vcodecContext, vformatContext->streams[video_stream_index]->codecpar)
+      var copar: UnsafeMutablePointer<AVCodecParameters>?
+      copar = vformatContext?.pointee.streams[Int(video_stream_index)]?.pointee.codecpar
+      avcodec_parameters_to_context(vcodecContext, copar)
       avcodec_open2(vcodecContext, vCodec, nil);
      //if we need audio stream, repeat 215-219 with AVMEDIA_TYPE_AUDIO and aCodec, audiostream, acodecContext
      //decode init done
@@ -262,22 +267,28 @@ class RNVideoTrimmer: NSObject {
         }
 //---------------------FFmpeg trimming start----------------------
         let timestamp_target = startTime
-        av_seek_frame(vformatContext, video_stream_index, timestamp_target, AVSEEK_FLAG_FRAME); //seek cutting point by time
+        av_seek_frame(vformatContext, video_stream_index, timestamp_target.value, AVSEEK_FLAG_FRAME) //seek cutting point by tim
         // or av_seek_frame(fmt_ctx, video_stream_index, timestamp_target, AVSEEK_FLAG_ANY)
         // try AVSEEK_FLAG_BACKWARD
-        var vFrame = UnsafeMutablePointer<AVFrame>? = nil
+        var vFrame: UnsafeMutablePointer<AVFrame>?
+        vFrame = nil
         vFrame=av_frame_alloc()
-        var vPacket : AVPacket
-        var got_frame : Int
+        var vPacket : UnsafeMutablePointer<AVPacket>?
+        vPacket = nil
+        var got_frame : Int32
         var frame_decoded : Int
+        frame_decoded = 0
         let second_needed = endTime-startTime
-        var vStream = UnsafeMutablePointer<AVStream>? = nil
-        var encodeContext = UnsafeMutablePointer<AVCodecContext>()?
+        var vStream: UnsafeMutablePointer<AVStream>?
+        vStream = nil
+        var encodeContext: UnsafeMutablePointer<AVCodecContext>?
+        encodeContext=nil
         let fps: Double = av_q2d(av_guess_frame_rate(vformatContext, vStream, vFrame))
-        while (av_read_frame(vformatContext, &vPacket) >= 0 && frame_decoded < second_needed * fps) {
-            if (vPacket.stream_index == video_stream_index) {
+        var ret: Int
+        while (av_read_frame(vformatContext, vPacket) >= 0 && Double(frame_decoded) < Double(second_needed.value) * fps) {
+          if (vPacket?.pointee.stream_index == video_stream_index) {
                 got_frame = 0;
-                ret = avcodec_decode_video2(vcodecContext, vFrame, &got_frame, &vPacket);
+              ret = Int(avcodec_decode_video2(vcodecContext, vFrame, &got_frame, vPacket));
                 // avcodec_decode_audio4  if using audio
               if ((got_frame) != 0) {
                     // encode frame here
@@ -299,7 +310,7 @@ class RNVideoTrimmer: NSObject {
         var outputURL = documentDirectory.appendingPathComponent("output")
         do {
             try manager.createDirectory(at: outputURL, withIntermediateDirectories: true, attributes: nil)
-            let name = self.randomString()
+          let name = self.randomString()
             outputURL = outputURL.appendingPathComponent("\(name).mp4")
         } catch {
             callback([error.localizedDescription, NSNull()])
@@ -353,15 +364,15 @@ class RNVideoTrimmer: NSObject {
         }
       }
 //-----------FFmpeg Trimming end-------------
-    vformatContext.destroy()
-    vCodec.destroy()
-    vcodecContext.destroy()
+    vformatContext?.deallocate()
+    vCodec?.deallocate()
+    vcodecContext?.deallocate()
 //-----------Memory Deallocation -------------
   }
-  @objc func encode( encodeContext: UnsafePointer<AVCodecContext>, eFrame: UnsafePointer<AVFrame> , eFrame:UnsafePointer<AVFrame>, ePacket: UnsafePointer<AVPacket>,
-  *outfile: FILE )
+func encode( encodeContext: UnsafeMutablePointer<AVCodecContext>, eFrame: UnsafeMutablePointer<AVFrame>, ePacket: UnsafeMutablePointer<AVPacket>,
+outfile: UnsafePointer<FILE> )
   {
-    var ret: Int
+      var ret: Int32
       /* send the frame to the encoder */
 
 
@@ -369,20 +380,19 @@ class RNVideoTrimmer: NSObject {
 
       ret = avcodec_send_frame(encodeContext, eFrame);
       if (ret < 0) {
-          return 0
+          return
       }
       while (ret >= 0) {
 
           ret = avcodec_receive_packet(encodeContext, ePacket)
-          if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF){}}
-            return 0
-      
+          //if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF){
+          //  return
+          //}
+          if (ret < 0) {
+              return
           }
-          else if (ret < 0) {
-              return 0
-          }
-          fwrite(ePacket->data, 1, ePacket->size, outfile)
-          //pkt의 메모리를 해제함
+         //fwrite(ePacket.pointee.data, 1, Int(ePacket.pointee.size), outfile)
+          //packet dealloc
           av_packet_unref(ePacket)
       }
   }
@@ -399,7 +409,7 @@ class RNVideoTrimmer: NSObject {
     }
 
     let sourceURL = getSourceURL(source: source)
-    let firstAsset =  (url: sourceURL as URL)
+    let firstAsset =  AVAsset(url: sourceURL as URL)
 
     let mixComposition = AVMutableComposition()
     let track = mixComposition.addMutableTrack(withMediaType: .video, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
