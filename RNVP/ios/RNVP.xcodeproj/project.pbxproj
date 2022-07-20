@@ -130,7 +130,6 @@
 		18A5CC1028812BA700FD4911 /* FFmpeg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FFmpeg.framework; path = FFmpegDylibFramework/FFmpeg.framework; sourceTree = "<group>"; };
 		18A5CC1228812DDC00FD4911 /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
 		18AB0F1B2887979F00533EDA /* RNTrim.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNTrim.swift; sourceTree = "<group>"; };
-		18AB0F2D2887B25100533EDA /* RNIO-bridging-header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RNIO-bridging-header.h"; sourceTree = "<group>"; };
 		18AB0F342887C7C100533EDA /* RNIOVideo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNIOVideo.m; sourceTree = "<group>"; };
 		18AB0F362887D05900533EDA /* RNIOVideo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNIOVideo.h; sourceTree = "<group>"; };
 		18FCA9A52879599500996AEC /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
@@ -218,6 +217,7 @@
 		18029315288120EF0087A38A /* RNVideoProcessing */ = {
 			isa = PBXGroup;
 			children = (
+				18AB0F1B2887979F00533EDA /* RNTrim.swift */,
 				18AB0F1228878E8700533EDA /* RNIO */,
 				1825985E288749A600AC9CD8 /* RNTrimmerView */,
 				1825986C288749A600AC9CD8 /* RNVideoTrimmer */,
@@ -292,8 +292,6 @@
 		18AB0F1228878E8700533EDA /* RNIO */ = {
 			isa = PBXGroup;
 			children = (
-				18AB0F1B2887979F00533EDA /* RNTrim.swift */,
-				18AB0F2D2887B25100533EDA /* RNIO-bridging-header.h */,
 				18AB0F342887C7C100533EDA /* RNIOVideo.m */,
 				18AB0F362887D05900533EDA /* RNIOVideo.h */,
 			);

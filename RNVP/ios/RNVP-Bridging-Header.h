@@ -9,4 +9,6 @@
 #import <React/RCTViewManager.h>
 #import "React/RCTBridgeModule.h"
 #import "RNVideoProcessing/RNVideoProcessing.h"
+#import "RNVideoProcessing/RNIO/RNIOVideo.h"
+
 	
