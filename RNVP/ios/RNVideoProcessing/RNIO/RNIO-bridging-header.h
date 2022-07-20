@@ -4,6 +4,6 @@
 //
 //  Created by apple on 2022/07/20.
 //
-#import "RNEncoderWrapper.h"
-#import "RNDecoderWrapper.h"
+#import "RNEncoderWrapper.hpp"
+#import "RNDecoderWrapper.hpp"
 #import RNTrim

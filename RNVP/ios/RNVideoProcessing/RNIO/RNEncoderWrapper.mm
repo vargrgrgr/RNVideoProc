@@ -5,7 +5,7 @@
 //  Created by apple on 2022/07/20.
 //
 
-#import "RNEncoderWrapper.h"
+#import "RNEncoderWrapper.hpp"
 #import "RNEncoder.h"
 
 @implementation RNEncoderWrapper
