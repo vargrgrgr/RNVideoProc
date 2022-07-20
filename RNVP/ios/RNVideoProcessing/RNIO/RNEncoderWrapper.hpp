@@ -9,4 +9,4 @@
 
 @interface RNEncoderWrapper : NSObject
 + (int) encode_frame: (AVCodecContext) *enc_ctx, (AVFrame) *frame, (AVPacket) *packet;
-@end
+@endΩΩ

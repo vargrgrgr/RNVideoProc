@@ -6,4 +6,5 @@
 //
 #import "RNEncoderWrapper.hpp"
 #import "RNDecoderWrapper.hpp"
+import "RNIOVideo.h"
 #import RNTrim

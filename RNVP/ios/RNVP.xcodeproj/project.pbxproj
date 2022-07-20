@@ -33,12 +33,8 @@
 		18A5CC052881224200FD4911 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 18A5CC022881222C00FD4911 /* libz.tbd */; };
 		18A5CC072881225600FD4911 /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 18A5CC062881224B00FD4911 /* libiconv.tbd */; };
 		18A5CC1328812DDC00FD4911 /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18A5CC1228812DDC00FD4911 /* VideoToolbox.framework */; };
-		18AB0F1828878E8700533EDA /* RNDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 18AB0F1428878E8700533EDA /* RNDecoder.m */; };
-		18AB0F1928878E8700533EDA /* RNEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 18AB0F1528878E8700533EDA /* RNEncoder.m */; };
 		18AB0F1C2887979F00533EDA /* RNTrim.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18AB0F1B2887979F00533EDA /* RNTrim.swift */; };
-		18AB0F1E2887A4F000533EDA /* RNSaveFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 18AB0F1D2887A4F000533EDA /* RNSaveFile.m */; };
-		18AB0F2B2887B21F00533EDA /* RNEncoderWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 18AB0F282887B21F00533EDA /* RNEncoderWrapper.mm */; };
-		18AB0F2C2887B21F00533EDA /* RNDecoderWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 18AB0F292887B21F00533EDA /* RNDecoderWrapper.mm */; };
+		18AB0F352887C7C100533EDA /* RNIOVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = 18AB0F342887C7C100533EDA /* RNIOVideo.m */; };
 		18CC70502884CB2E00F6E5D3 /* FFmpeg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18A5CC1028812BA700FD4911 /* FFmpeg.framework */; };
 		18CC70512884CB2E00F6E5D3 /* FFmpeg.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 18A5CC1028812BA700FD4911 /* FFmpeg.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		18FCA9A92879599500996AEC /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18FCA9A52879599500996AEC /* CoreVideo.framework */; };
@@ -133,17 +129,10 @@
 		18A5CC062881224B00FD4911 /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
 		18A5CC1028812BA700FD4911 /* FFmpeg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FFmpeg.framework; path = FFmpegDylibFramework/FFmpeg.framework; sourceTree = "<group>"; };
 		18A5CC1228812DDC00FD4911 /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
-		18AB0F1328878E8700533EDA /* RNEncoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNEncoder.h; sourceTree = "<group>"; };
-		18AB0F1428878E8700533EDA /* RNDecoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNDecoder.m; sourceTree = "<group>"; };
-		18AB0F1528878E8700533EDA /* RNEncoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNEncoder.m; sourceTree = "<group>"; };
-		18AB0F1628878E8700533EDA /* RNDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNDecoder.h; sourceTree = "<group>"; };
 		18AB0F1B2887979F00533EDA /* RNTrim.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNTrim.swift; sourceTree = "<group>"; };
-		18AB0F1D2887A4F000533EDA /* RNSaveFile.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNSaveFile.m; sourceTree = "<group>"; };
-		18AB0F272887B21F00533EDA /* RNEncoderWrapper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = RNEncoderWrapper.hpp; sourceTree = "<group>"; };
-		18AB0F282887B21F00533EDA /* RNEncoderWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RNEncoderWrapper.mm; sourceTree = "<group>"; };
-		18AB0F292887B21F00533EDA /* RNDecoderWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RNDecoderWrapper.mm; sourceTree = "<group>"; };
-		18AB0F2A2887B21F00533EDA /* RNDecoderWrapper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = RNDecoderWrapper.hpp; sourceTree = "<group>"; };
 		18AB0F2D2887B25100533EDA /* RNIO-bridging-header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RNIO-bridging-header.h"; sourceTree = "<group>"; };
+		18AB0F342887C7C100533EDA /* RNIOVideo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNIOVideo.m; sourceTree = "<group>"; };
+		18AB0F362887D05900533EDA /* RNIOVideo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNIOVideo.h; sourceTree = "<group>"; };
 		18FCA9A52879599500996AEC /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		18FCA9AA2879599D00996AEC /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		18FCA9AC287959A500996AEC /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
@@ -303,17 +292,10 @@
 		18AB0F1228878E8700533EDA /* RNIO */ = {
 			isa = PBXGroup;
 			children = (
-				18AB0F2A2887B21F00533EDA /* RNDecoderWrapper.hpp */,
-				18AB0F292887B21F00533EDA /* RNDecoderWrapper.mm */,
-				18AB0F272887B21F00533EDA /* RNEncoderWrapper.hpp */,
-				18AB0F282887B21F00533EDA /* RNEncoderWrapper.mm */,
-				18AB0F1328878E8700533EDA /* RNEncoder.h */,
-				18AB0F1428878E8700533EDA /* RNDecoder.m */,
-				18AB0F1528878E8700533EDA /* RNEncoder.m */,
-				18AB0F1628878E8700533EDA /* RNDecoder.h */,
 				18AB0F1B2887979F00533EDA /* RNTrim.swift */,
-				18AB0F1D2887A4F000533EDA /* RNSaveFile.m */,
 				18AB0F2D2887B25100533EDA /* RNIO-bridging-header.h */,
+				18AB0F342887C7C100533EDA /* RNIOVideo.m */,
+				18AB0F362887D05900533EDA /* RNIOVideo.h */,
 			);
 			path = RNIO;
 			sourceTree = "<group>";
@@ -673,9 +655,9 @@
 				18259874288749A600AC9CD8 /* RNTrimmerView.swift in Sources */,
 				18AB0F1C2887979F00533EDA /* RNTrim.swift in Sources */,
 				188177A928872EB90073C593 /* RNVideoPlayer.swift in Sources */,
-				18AB0F2B2887B21F00533EDA /* RNEncoderWrapper.mm in Sources */,
 				18259873288749A600AC9CD8 /* VideoProcessingGPUFilters.swift in Sources */,
 				1825987A288749A600AC9CD8 /* SDAVAssetExportSession.m in Sources */,
+				18AB0F352887C7C100533EDA /* RNIOVideo.m in Sources */,
 				1825987C288749A600AC9CD8 /* AVUtilities.swift in Sources */,
 				18259878288749A600AC9CD8 /* ICGVideoTrimmerView.m in Sources */,
 				1825987D288749A600AC9CD8 /* RNVideoTrimmer.swift in Sources */,
@@ -685,12 +667,8 @@
 				188177C1288738020073C593 /* RNVideoProcessingManager.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				18259876288749A600AC9CD8 /* RNTrimmerViewBridge.m in Sources */,
-				18AB0F1E2887A4F000533EDA /* RNSaveFile.m in Sources */,
-				18AB0F2C2887B21F00533EDA /* RNDecoderWrapper.mm in Sources */,
-				18AB0F1828878E8700533EDA /* RNDecoder.m in Sources */,
 				1825987B288749A600AC9CD8 /* RNVideoTrimmerBridge.m in Sources */,
 				188177AB28872EB90073C593 /* RNVideoProcessingBridge.m in Sources */,
-				18AB0F1928878E8700533EDA /* RNEncoder.m in Sources */,
 				18259879288749A600AC9CD8 /* ICGThumbView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
