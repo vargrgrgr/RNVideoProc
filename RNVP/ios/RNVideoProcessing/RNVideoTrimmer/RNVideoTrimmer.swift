@@ -6,8 +6,6 @@
 import Foundation
 import AVFoundation
 import UIKit
-import FFmpeg
-
 
 enum QUALITY_ENUM: String {
   case QUALITY_LOW = "low"
@@ -178,7 +176,6 @@ class RNVideoTrimmer: NSObject {
     }
   }
 
-
   @objc func trim(_ source: String, options: NSDictionary, callback: @escaping RCTResponseSenderBlock) {
 
       var sTime:Float?
@@ -203,30 +200,7 @@ class RNVideoTrimmer: NSObject {
 
       let sourceURL = getSourceURL(source: source)
       let asset = AVAsset(url: sourceURL as URL)
-//---------------------FFmpeg video decode initiation----------------------
-    
 
-      var vformatContext: UnsafeMutablePointer<AVFormatContext>?
-      vformatContext = nil
-      if avformat_open_input(&vformatContext, source, nil, nil) != 0 {
-          print("Couldn't open file")
-          return
-      }
-      avformat_find_stream_info(vformatContext, nil)
-      var vCodec: UnsafeMutablePointer<AVCodec>?
-      vCodec = nil
-      let video_stream_index : Int32 = av_find_best_stream(vformatContext, AVMEDIA_TYPE_VIDEO, -1, -1, &vCodec, 0) //find right video channel in file
-      var vcodecContext: UnsafeMutablePointer<AVCodecContext>?
-      vcodecContext=nil
-      vcodecContext = avcodec_alloc_context3(nil)
-      var copar: UnsafeMutablePointer<AVCodecParameters>?
-      copar = vformatContext?.pointee.streams[Int(video_stream_index)]?.pointee.codecpar
-      avcodec_parameters_to_context(vcodecContext, copar)
-      avcodec_open2(vcodecContext, vCodec, nil);
-     //if we need audio stream, repeat 215-219 with AVMEDIA_TYPE_AUDIO and aCodec, audiostream, acodecContext
-     //decode init done
-      
-//---------------------FFmpeg video decode initiation----------------------
       asset.loadValuesAsynchronously(forKeys: [ "exportable", "tracks" ]) {
         precondition(asset.statusOfValue(forKey: "exportable", error: nil) == .loaded)
         precondition(asset.statusOfValue(forKey: "tracks", error: nil) == .loaded)
@@ -242,9 +216,11 @@ class RNVideoTrimmer: NSObject {
         let startTime = CMTime(seconds: Double(sTime!), preferredTimescale: 1000)
         let endTime = CMTime(seconds: Double(eTime!), preferredTimescale: 1000)
         let timeRange = CMTimeRange(start: startTime, end: endTime)
+
         let composition = AVMutableComposition()
         let track = composition.addMutableTrack(withMediaType: .video, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
         let videoOrientation = self.getVideoOrientationFromAsset(asset: asset)
+
         if ( videoOrientation == .up  ) {
           var transforms: CGAffineTransform?
           transforms = track?.preferredTransform
@@ -266,20 +242,7 @@ class RNVideoTrimmer: NSObject {
           transforms = transforms?.concatenating(CGAffineTransform(rotationAngle: CGFloat(180.0 * .pi / 180)))
           track?.preferredTransform = transforms!
         }
-        var outputURL = documentDirectory.appendingPathComponent("output")
-        do {
-            try manager.createDirectory(at: outputURL, withIntermediateDirectories: true, attributes: nil)
-          let name = self.randomString()
-            outputURL = outputURL.appendingPathComponent("\(name).mp4")
-        } catch {
-            callback([error.localizedDescription, NSNull()])
-            print(error)
-        }
-//---------------------FFmpeg trimming start----------------------
-	
-        
-        
-//---------------------FFmpeg trimming end----------------------
+
         do {
           try composition.insertTimeRange(timeRange, of: asset, at: CMTime.zero)
         } catch {
@@ -288,7 +251,15 @@ class RNVideoTrimmer: NSObject {
           return
         }
 
-        
+        var outputURL = documentDirectory.appendingPathComponent("output")
+        do {
+            try manager.createDirectory(at: outputURL, withIntermediateDirectories: true, attributes: nil)
+            let name = self.randomString()
+            outputURL = outputURL.appendingPathComponent("\(name).mp4")
+        } catch {
+            callback([error.localizedDescription, NSNull()])
+            print(error)
+        }
 
         //Remove existing file
         _ = try? manager.removeItem(at: outputURL)
@@ -297,7 +268,7 @@ class RNVideoTrimmer: NSObject {
         let useQuality = self.getQualityForAsset(quality: quality, asset: asset)
 
         print("RNVideoTrimmer passed quality: \(quality). useQuality: \(useQuality)")
-                                              
+
         guard let exportSession = AVAssetExportSession(asset: finalComposition, presetName: useQuality)
             else {
                 callback(["Error creating AVAssetExportSession", NSNull()])
@@ -336,44 +307,8 @@ class RNVideoTrimmer: NSObject {
             }
         }
       }
-//-----------FFmpeg Trimming end-------------
-    vformatContext?.deallocate()
-    vCodec?.deallocate()
-    vcodecContext?.deallocate()
-    
-//-----------Memory Deallocation -------------
   }
-func encode( encodeContext: UnsafeMutablePointer<AVCodecContext>, eFrame: UnsafeMutablePointer<AVFrame>, ePacket: UnsafeMutablePointer<AVPacket>,
-outfile: UnsafeMutablePointer<FILE> )
-  {
-      var ret: Int32
-      /* send the frame to the encoder */
 
-
-      // encode
-
-      ret = avcodec_send_frame(encodeContext, eFrame);
-      if (ret < 0) {
-          return
-      }
-      while (ret >= 0) {
-          ret = avcodec_receive_packet(encodeContext, ePacket)
-        if(ret==Int32(AVError.maximumFileSizeReached) || ret==Int32(ret==AVError.noDataCaptured)){
-        //if(false){
-            return
-          }
-          else if (ret < 0) {
-              return
-          }
-          fwrite(ePacket.pointee.data, 1, Int(ePacket.pointee.size), outfile)
-          //packet dealloc
-          av_packet_unref(ePacket)//memory deallocß
-      }
-  }
-  //-----------Mencode func -------------
-  
-  
-  
   @objc func boomerang(_ source: String, options: NSDictionary, callback: @escaping RCTResponseSenderBlock) {
 
     let quality = ""
@@ -386,7 +321,7 @@ outfile: UnsafeMutablePointer<FILE> )
     }
 
     let sourceURL = getSourceURL(source: source)
-    let firstAsset =  AVAsset(url: sourceURL as URL)
+    let firstAsset = AVAsset(url: sourceURL as URL)
 
     let mixComposition = AVMutableComposition()
     let track = mixComposition.addMutableTrack(withMediaType: .video, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
@@ -612,7 +547,7 @@ outfile: UnsafeMutablePointer<FILE> )
           }
       })
   }
-  
+
   @objc func getAssetInfo(_ source: String, callback: RCTResponseSenderBlock) {
     let sourceURL = getSourceURL(source: source)
     let asset = AVAsset(url: sourceURL)

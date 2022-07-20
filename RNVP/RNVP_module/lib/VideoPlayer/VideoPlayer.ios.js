@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { View, ViewPropTypes, requireNativeComponent, NativeModules, UIManager } from 'react-native';
-import { getActualSource } from '../utils';
-const PLAYER_COMPONENT_NAME = 'RNVideoProcessing';
+//import { getActualSource } from '../utils';
 
 const { RNVideoTrimmer } = NativeModules;
 
@@ -67,9 +66,9 @@ export class VideoPlayer extends Component {
   }
 
   getPreviewForSecond(forSecond = 0, maximumSize, format = 'base64') {
-    const actualSource = getActualSource(this.props.source);
+    //const actualSource = getActualSource(this.props.source);
     return new Promise((resolve, reject) => {
-      RNVideoTrimmer.getPreviewImageAtPosition(actualSource, forSecond, maximumSize, format,
+      RNVideoTrimmer.getPreviewImageAtPosition(this.props.source, forSecond, maximumSize, format,
         (err, base64) => {
           if (err) {
             return reject(err);
@@ -80,9 +79,9 @@ export class VideoPlayer extends Component {
   }
 
   getVideoInfo() {
-    const actualSource = getActualSource(this.props.source);
+    //const actualSource = getActualSource(this.props.source);
     return new Promise((resolve, reject) => {
-      RNVideoTrimmer.getAssetInfo(actualSource, (err, info) => {
+      RNVideoTrimmer.getAssetInfo(this.props.source, (err, info) => {
         if (err) {
           return reject(err);
         }
@@ -98,68 +97,68 @@ export class VideoPlayer extends Component {
     this.props.onChange(event);
   }
 
-  trim(options = {}) {
-    const availableQualities = Object.values(VideoPlayer.Constants.quality);
-    if (!options.hasOwnProperty('startTime')) {
-      // eslint-disable-next-line no-console
-      console.warn('Start time is not specified');
-    }
-    if (!options.hasOwnProperty('endTime')) {
-      // eslint-disable-next-line no-console
-      console.warn('End time is not specified');
-    }
-    if (options.hasOwnProperty('quality') && !availableQualities.includes(options.quality)) {
-      // eslint-disable-next-line no-console
-      console.warn('Quality is wrong, Please use VideoPlayer.Constants.quality');
-    }
-    const actualSource = getActualSource(this.props.source);
-    return new Promise((resolve, reject) => {
-      RNVideoTrimmer.trim(actualSource, options, (err, output) => {
-        if (err) {
-          return reject(err);
-        }
-        return resolve(output);
-      });
-    });
-  }
+  // trim(options = {}) {
+  //   const availableQualities = Object.values(VideoPlayer.Constants.quality);
+  //   if (!options.hasOwnProperty('startTime')) {
+  //     // eslint-disable-next-line no-console
+  //     console.warn('Start time is not specified');
+  //   }
+  //   if (!options.hasOwnProperty('endTime')) {
+  //     // eslint-disable-next-line no-console
+  //     console.warn('End time is not specified');
+  //   }
+  //   if (options.hasOwnProperty('quality') && !availableQualities.includes(options.quality)) {
+  //     // eslint-disable-next-line no-console
+  //     console.warn('Quality is wrong, Please use VideoPlayer.Constants.quality');
+  //   }
+  //   const actualSource = getActualSource(this.props.source);
+  //   return new Promise((resolve, reject) => {
+  //     RNVideoTrimmer.trim(actualSource, options, (err, output) => {
+  //       if (err) {
+  //         return reject(err);
+  //       }
+  //       return resolve(output);
+  //     });
+  //   });
+  // }
 
-  compress(_options = {}) {
-    const options = { ..._options };
-    // const options = {
-    // 	height: 1080, // output video's height
-    // 	width: 720, // output video's width
-    // 	bitrateMultiplier: 10 // divide video's bitrate to this value
-    // };
-    if (options.hasOwnProperty('bitrateMultiplier') && options.bitrateMultiplier <= 0) {
-      options.bitrateMultiplier = 1;
-      // eslint-disable-next-line no-console
-      console.warn('bitrateMultiplier cannot be less than zero');
-    }
-    if (options.hasOwnProperty('height') && options.height <= 0) {
-      delete options.height;
-      // eslint-disable-next-line no-console
-      console.warn('height cannot be less than zero');
-    }
-    if (options.hasOwnProperty('width') && options.width <= 0) {
-      delete options.width;
-      // eslint-disable-next-line no-console
-      console.warn('width cannot be less than zero');
-    }
-    if (options.hasOwnProperty('minimumBitrate') && options.minimumBitrate <= 0) {
-      delete options.minimumBitrate;
-      // eslint-disable-next-line no-console
-      console.warn('minimumBitrate cannot be less than zero');
-    }
-    const actualSource = getActualSource(this.props.source);
-    return new Promise((resolve, reject) => {
-      RNVideoTrimmer.compress(actualSource, options, (err, output) => {
-        if (err) {
-          return reject(err);
-        }
-        return resolve(output);
-      });
-    });
-  }
+  // compress(_options = {}) {
+  //   const options = { ..._options };
+  //   // const options = {
+  //   // 	height: 1080, // output video's height
+  //   // 	width: 720, // output video's width
+  //   // 	bitrateMultiplier: 10 // divide video's bitrate to this value
+  //   // };
+  //   if (options.hasOwnProperty('bitrateMultiplier') && options.bitrateMultiplier <= 0) {
+  //     options.bitrateMultiplier = 1;
+  //     // eslint-disable-next-line no-console
+  //     console.warn('bitrateMultiplier cannot be less than zero');
+  //   }
+  //   if (options.hasOwnProperty('height') && options.height <= 0) {
+  //     delete options.height;
+  //     // eslint-disable-next-line no-console
+  //     console.warn('height cannot be less than zero');
+  //   }
+  //   if (options.hasOwnProperty('width') && options.width <= 0) {
+  //     delete options.width;
+  //     // eslint-disable-next-line no-console
+  //     console.warn('width cannot be less than zero');
+  //   }
+  //   if (options.hasOwnProperty('minimumBitrate') && options.minimumBitrate <= 0) {
+  //     delete options.minimumBitrate;
+  //     // eslint-disable-next-line no-console
+  //     console.warn('minimumBitrate cannot be less than zero');
+  //   }
+  //   const actualSource = getActualSource(this.props.source);
+  //   return new Promise((resolve, reject) => {
+  //     RNVideoTrimmer.compress(actualSource, options, (err, output) => {
+  //       if (err) {
+  //         return reject(err);
+  //       }
+  //       return resolve(output);
+  //     });
+  //   });
+  // }
 
   render() {
     const {
@@ -187,10 +186,10 @@ export class VideoPlayer extends Component {
       }
     }
 
-    const actualSource = getActualSource(source);
+    //const actualSource = getActualSource(source);
     return (
       <RNVideoPlayer
-        source={actualSource}
+        source={source}
         play={play}
         replay={replay}
         rotate={rotate}
@@ -209,4 +208,4 @@ export class VideoPlayer extends Component {
   }
 }
 
-const RNVideoPlayer = requireNativeComponent(PLAYER_COMPONENT_NAME, VideoPlayer);
+const RNVideoPlayer = requireNativeComponent(RNVideoProcessing, VideoPlayer);

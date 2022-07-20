@@ -1,1 +1,0 @@
-export { Trimmer } from './Trimmer'

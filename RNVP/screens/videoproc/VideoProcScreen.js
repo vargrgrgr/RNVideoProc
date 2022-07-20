@@ -53,7 +53,7 @@ const initialTrimUnitSize = 5000;
   onScrubbingComplete = (newValue) => {
     this.setState({ playing: false, scrubberPosition: newValue })
   }
-  
+  //----------------
   trimVideo = () => {
       const options = {
           startTime: this.state.trimmerLeftHandlePosition/1000,
@@ -64,21 +64,7 @@ const initialTrimUnitSize = 5000;
           .then((newSource) => console.log(newSource))
           .catch(console.warn);
   }
-  compressVideo = () => {
-      const options = {
-          width: 720,
-          height: 1280,
-          bitrateMultiplier: 3,
-          saveToCameraRoll: true, // default is false, iOS only
-          saveWithCurrentDate: true, // default is false, iOS only
-          minimumBitrate: 300000,
-          removeAudio: true, // default is false
-      };
-      this.videoPlayerRef.compress(options)
-          .then((newSource) => console.log(newSource))
-          .catch(console.warn);
-  }
-
+  //----------------
   getPreviewImageForSecond = (second) => {
       const maximumSize = { width: 1080, height: 1080 }; // default is { width: 1080, height: 1080 } iOS only
       this.videoPlayerRef.getPreviewForSecond(second, maximumSize) // maximumSize is iOS only

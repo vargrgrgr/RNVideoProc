@@ -12,7 +12,6 @@ target 'RNVP' do
     :hermes_enabled => false
   )
 
-
   target 'RNVPTests' do
     inherit! :complete
     # Pods for testing

@@ -11,8 +11,7 @@ const StackNavigation = () => {
   return (
     <Stack.Navigator>
         <Stack.Screen name="SelectVideo" component={SelectVideoScreen} />
-        <Stack.Screen name="VideoProc" component={VideoProcScreen} >
-        </Stack.Screen>
+        //<Stack.Screen name="VideoProc" component={VideoProcScreen} />
     </Stack.Navigator>
 );
 };

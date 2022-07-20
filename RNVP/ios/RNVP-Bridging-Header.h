@@ -6,6 +6,7 @@
 //
 #import <React/RCTRootView.h>
 #import <React/RCTView.h>
+#import <React/RCTViewManager.h>
 #import "React/RCTBridgeModule.h"
-#import "RNVideoProcessing.h"
+#import "RNVideoProcessing/RNVideoProcessing.h"
 	
