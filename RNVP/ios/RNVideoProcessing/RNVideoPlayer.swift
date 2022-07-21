@@ -6,7 +6,6 @@
 
 import Foundation
 import AVFoundation
-import RNTrim
 //import GPUImage
 
 
@@ -450,7 +449,7 @@ class RNVideoPlayer: RCTView {
       return useQuality
     }
     func trim(_ source: String, options: NSDictionary, callback: @escaping RCTResponseSenderBlock) {
-      RNTrim.ffmpeg_trim(source, options, startTime, endTime)
+      //RNTrim.ffmpeg_trim(source, options, startTime, endTime)
     }
   func randomString() -> String {
     let letters: NSString = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
