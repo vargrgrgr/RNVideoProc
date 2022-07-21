@@ -3,7 +3,10 @@ import {
   View, Button, StyleSheet,
 } from 'react-native';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker'
+
 function SelectVideoScreen ({navigation}) {
+  componentDidMount();
+
   const recordVideo = () => {
     const options = {
       title: '영상 녹화',
