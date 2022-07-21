@@ -6,7 +6,7 @@
 
 import Foundation
 import AVFoundation
-import GPUImage
+//import GPUImage
 
 
 @objc(RNVideoPlayer)
@@ -325,6 +325,16 @@ class RNVideoPlayer: RCTView {
 //            print("CREATED: Preview: Hue: \(toBase64(image: huePreview!))")
 //        }
 //    }
+    func getSourceURL(source: String) -> URL {
+      var sourceURL: URL
+      if source.contains("assets-library") {
+        sourceURL = NSURL(string: source) as! URL
+      } else {
+        let bundleUrl = Bundle.main.resourceURL!
+        sourceURL = URL(string: source, relativeTo: bundleUrl)!
+      }
+      return sourceURL
+    }
     func getAssetInfo(_ source: String, callback: RCTResponseSenderBlock) {
       let sourceURL = getSourceURL(source: source)
       let asset = AVAsset(url: sourceURL)
