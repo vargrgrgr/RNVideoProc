@@ -6,7 +6,7 @@
 
 import Foundation
 import AVFoundation
-//import GPUImage
+import GPUImage
 
 
 @objc(RNVideoPlayer)
