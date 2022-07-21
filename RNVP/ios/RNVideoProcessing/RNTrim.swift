@@ -25,7 +25,7 @@ enum QUALITY_ENUM: String {
 
 @objc(RNVideoTrimmer)
 class RNVideoTrimmer: NSObject {
-  @objc func RNtrim(_ source: String, options: NSDictionary, callback: @escaping RCTResponseSenderBlock) {
+  @objc func ffmpeg_trim(_ source: String, options: NSDictionary, startTime: NSNumber, endTime: NSNumber) {
 
         var sTime:Float?
         var eTime:Float?
@@ -40,15 +40,9 @@ class RNVideoTrimmer: NSObject {
         let saveToCameraRoll = options.object(forKey: "saveToCameraRoll") as? Bool ?? false
         let saveWithCurrentDate = options.object(forKey: "saveWithCurrentDate") as? Bool ?? false
 
-        let manager = FileManager.default
-        guard let documentDirectory = try? manager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-            else {
-                callback(["Error creating FileManager", NSNull()])
-                return#imageLiteral(resourceName: "simulator_screenshot_E2DED635-88F7-461C-BA43-0B999C09D0C6.png")
-        }
 
-        let sourceURL = getSourceURL(source: source)
-        let asset = AVAsset(url: sourceURL as URL)
+        //let sourceURL = getSourceURL(source: source)
+        //let asset = AVAsset(url: sourceURL as URL)
   //---------------------FFmpeg video decode initiation----------------------
       
 
@@ -73,7 +67,7 @@ class RNVideoTrimmer: NSObject {
        //decode init done
         
   //---------------------FFmpeg video decode initiation----------------------
-        asset.loadValuesAsynchronously(forKeys: [ "exportable", "tracks" ]) {
+          asset.loadValuesAsynchronously(forKeys: [ "exportable", "tracks" ]) {
           precondition(asset.statusOfValue(forKey: "exportable", error: nil) == .loaded)
           precondition(asset.statusOfValue(forKey: "tracks", error: nil) == .loaded)
           precondition(asset.isExportable)
@@ -88,32 +82,9 @@ class RNVideoTrimmer: NSObject {
           let startTime = CMTime(seconds: Double(sTime!), preferredTimescale: 1000)
           let endTime = CMTime(seconds: Double(eTime!), preferredTimescale: 1000)
           let timeRange = CMTimeRange(start: startTime, end: endTime)
-          let composition = AVMutableComposition()
-          let track = composition.addMutableTrack(withMediaType: .video, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
-          let videoOrientation = self.getVideoOrientationFromAsset(asset: asset)
-          if ( videoOrientation == .up  ) {
-            var transforms: CGAffineTransform?
-            transforms = track?.preferredTransform
-            transforms = CGAffineTransform(rotationAngle: 0)
-            transforms = transforms?.concatenating(CGAffineTransform(rotationAngle: CGFloat(90.0 * .pi / 180)))
-            track?.preferredTransform = transforms!
-          }
-          else if ( videoOrientation == .down ) {
-            var transforms: CGAffineTransform?
-            transforms = track?.preferredTransform
-            transforms = CGAffineTransform(rotationAngle: 0)
-            transforms = transforms?.concatenating(CGAffineTransform(rotationAngle: CGFloat(270.0 * .pi / 180)))
-            track?.preferredTransform = transforms!
-          }
-          else if ( videoOrientation == .left ) {
-            var transforms: CGAffineTransform?
-            transforms = track?.preferredTransform
-            transforms = CGAffineTransform(rotationAngle: 0)
-            transforms = transforms?.concatenating(CGAffineTransform(rotationAngle: CGFloat(180.0 * .pi / 180)))
-            track?.preferredTransform = transforms!
-          }
+          
   //---------------------FFmpeg trimming start----------------------
-          let timestamp_target = startTime
+          let timestamp_target = sTime
           av_seek_frame(vformatContext, video_stream_index, timestamp_target.value, AVSEEK_FLAG_FRAME) //seek cutting point by tim
           // or av_seek_frame(fmt_ctx, video_stream_index, timestamp_target, AVSEEK_FLAG_ANY)
           // try AVSEEK_FLAG_BACKWARD
@@ -139,6 +110,7 @@ class RNVideoTrimmer: NSObject {
                   // avcodec_decode_audio4  if using audio
                 if ((got_frame) != 0) {
                   ret = Int(Encode_frame(vcodecContext, vFrame, vPacket));
+                  
                       // encode frame here
                 }
             }

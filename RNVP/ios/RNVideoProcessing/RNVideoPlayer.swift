@@ -6,7 +6,7 @@
 
 import Foundation
 import AVFoundation
-
+import RNTrim
 //import GPUImage
 
 
@@ -26,7 +26,7 @@ class RNVideoPlayer: RCTView {
 //
   //let filterView: GPUImageView = GPUImageView()
   
-  var _playerHeight: CGFloat = UIScreen.main.bounds.width * 4 / 3
+  var _playerHeight: CGFloat = UIScreen.main.bounds.height
   var _playerWidth: CGFloat = UIScreen.main.bounds.width
   var _moviePathSource: NSString = ""
   var _playerStartTime: CGFloat = 0
@@ -34,7 +34,7 @@ class RNVideoPlayer: RCTView {
   var _replay: Bool = false
   var _rotate: Bool = false
   var isInitialized = false
-  var _resizeMode = AVLayerVideoGravity.resizeAspect
+  var _resizeMode = AVLayerVideoGravity.resizeAspectFill
   @objc var onChange: RCTBubblingEventBlock?
   
   let LOG_KEY: String = "VIDEO_PROCESSING"
@@ -114,7 +114,7 @@ class RNVideoPlayer: RCTView {
             guard let newValue = newValue as String? else {
                 return
             }
-          self._resizeMode = AVLayerVideoGravity.resizeAspect
+          self._resizeMode = AVLayerVideoGravity.resizeAspectFill
             self.playerLayer?.videoGravity = self._resizeMode
             self.setNeedsLayout()
         }
@@ -450,136 +450,7 @@ class RNVideoPlayer: RCTView {
       return useQuality
     }
     func trim(_ source: String, options: NSDictionary, callback: @escaping RCTResponseSenderBlock) {
-
-        var sTime:Float?
-        var eTime:Float?
-        if let num = options.object(forKey: "startTime") as? NSNumber {
-            sTime = num.floatValue
-        }
-        if let num = options.object(forKey: "endTime") as? NSNumber {
-            eTime = num.floatValue
-        }
-
-        let quality = ((options.object(forKey: "quality") as? String) != nil) ? options.object(forKey: "quality") as! String : ""
-        let saveToCameraRoll = options.object(forKey: "saveToCameraRoll") as? Bool ?? false
-        let saveWithCurrentDate = options.object(forKey: "saveWithCurrentDate") as? Bool ?? false
-
-        let manager = FileManager.default
-        guard let documentDirectory = try? manager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-            else {
-                callback(["Error creating FileManager", NSNull()])
-                return
-        }
-
-        let sourceURL = getSourceURL(source: source)
-        let asset = AVAsset(url: sourceURL as URL)
-
-        asset.loadValuesAsynchronously(forKeys: [ "exportable", "tracks" ]) {
-          precondition(asset.statusOfValue(forKey: "exportable", error: nil) == .loaded)
-          precondition(asset.statusOfValue(forKey: "tracks", error: nil) == .loaded)
-          precondition(asset.isExportable)
-
-          if eTime == nil {
-              eTime = Float(asset.duration.seconds)
-          }
-          if sTime == nil {
-              sTime = 0
-          }
-
-          let startTime = CMTime(seconds: Double(sTime!), preferredTimescale: 1000)
-          let endTime = CMTime(seconds: Double(eTime!), preferredTimescale: 1000)
-          let timeRange = CMTimeRange(start: startTime, end: endTime)
-
-          let composition = AVMutableComposition()
-          let track = composition.addMutableTrack(withMediaType: .video, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
-          let videoOrientation = self.getVideoOrientationFromAsset(asset: asset)
-
-          if ( videoOrientation == .up  ) {
-            var transforms: CGAffineTransform?
-            transforms = track?.preferredTransform
-            transforms = CGAffineTransform(rotationAngle: 0)
-            transforms = transforms?.concatenating(CGAffineTransform(rotationAngle: CGFloat(90.0 * .pi / 180)))
-            track?.preferredTransform = transforms!
-          }
-          else if ( videoOrientation == .down ) {
-            var transforms: CGAffineTransform?
-            transforms = track?.preferredTransform
-            transforms = CGAffineTransform(rotationAngle: 0)
-            transforms = transforms?.concatenating(CGAffineTransform(rotationAngle: CGFloat(270.0 * .pi / 180)))
-            track?.preferredTransform = transforms!
-          }
-          else if ( videoOrientation == .left ) {
-            var transforms: CGAffineTransform?
-            transforms = track?.preferredTransform
-            transforms = CGAffineTransform(rotationAngle: 0)
-            transforms = transforms?.concatenating(CGAffineTransform(rotationAngle: CGFloat(180.0 * .pi / 180)))
-            track?.preferredTransform = transforms!
-          }
-
-          do {
-            try composition.insertTimeRange(timeRange, of: asset, at: CMTime.zero)
-          } catch {
-            callback(["Error inserting time range", NSNull()])
-            // Error handling code here
-            return
-          }
-
-          var outputURL = documentDirectory.appendingPathComponent("output")
-          do {
-              try manager.createDirectory(at: outputURL, withIntermediateDirectories: true, attributes: nil)
-              let name = self.randomString()
-              outputURL = outputURL.appendingPathComponent("\(name).mp4")
-          } catch {
-              callback([error.localizedDescription, NSNull()])
-              print(error)
-          }
-
-          //Remove existing file
-          _ = try? manager.removeItem(at: outputURL)
-
-          let finalComposition = composition.copy() as! AVComposition
-          let useQuality = self.getQualityForAsset(quality: quality, asset: asset)
-
-          print("RNVideoTrimmer passed quality: \(quality). useQuality: \(useQuality)")
-
-          guard let exportSession = AVAssetExportSession(asset: finalComposition, presetName: useQuality)
-              else {
-                  callback(["Error creating AVAssetExportSession", NSNull()])
-                  return
-          }
-          exportSession.outputURL = NSURL.fileURL(withPath: outputURL.path)
-          exportSession.outputFileType = .mp4
-          exportSession.shouldOptimizeForNetworkUse = true
-
-          if saveToCameraRoll && saveWithCurrentDate {
-            let metaItem = AVMutableMetadataItem()
-            metaItem.key = AVMetadataKey.commonKeyCreationDate as (NSCopying & NSObjectProtocol)
-            metaItem.keySpace = .common
-            metaItem.value = NSDate()
-            exportSession.metadata = [metaItem]
-          }
-
-
-
-          exportSession.timeRange = timeRange
-          exportSession.exportAsynchronously{
-              switch exportSession.status {
-              case .completed:
-                  callback( [NSNull(), outputURL.absoluteString] )
-                  if saveToCameraRoll {
-                      UISaveVideoAtPathToSavedPhotosAlbum(outputURL.relativePath, self, nil, nil)
-                  }
-
-              case .failed:
-                  callback( ["Failed: \(exportSession.error)", NSNull()] )
-
-              case .cancelled:
-                  callback( ["Cancelled: \(exportSession.error)", NSNull()] )
-
-              default: break
-              }
-          }
-        }
+      RNTrim.ffmpeg_trim(source, options, startTime, endTime)
     }
   func randomString() -> String {
     let letters: NSString = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
@@ -621,18 +492,25 @@ class RNVideoPlayer: RCTView {
         player.replaceCurrentItem(with: playerItem)
         
         // MARK - Temporary removing playeLayer, it dublicates video if it's in landscape mode
-                // playerLayer = AVPlayerLayer(player: player)
-                // playerLayer!.videoGravity = self._resizeMode
-                // playerLayer!.masksToBounds = true
-                // playerLayer!.removeFromSuperlayer()		
-        
-        print("CHANGED playerframe \(playerLayer), frameAAA \(playerLayer?.frame)")
+                 playerLayer = AVPlayerLayer(player: player)
+                 playerLayer!.videoGravity = self._resizeMode
+                 playerLayer!.masksToBounds = true
+                 //playerLayer!.removeFromSuperlayer()
+
+      print("CHANGED playerframe \(playerLayer), frameAAA \(playerLayer?.frame)")
         self.setNeedsLayout()
         
         self._playerEndTime = CGFloat(CMTimeGetSeconds((player.currentItem?.asset.duration)!))
         print("CHANGED playerEndTime \(self._playerEndTime)")
-        print("AVLayerVideoGravity \(AVLayerVideoGravity.resizeAspect)")
+      
         
+        self.setPlayerWidth(UIScreen.main.bounds.width as NSNumber)
+        self.setPlayerHeight(UIScreen.main.bounds.height as NSNumber)
+        playerLayer?.bounds=self.bounds
+        self.layer.addSublayer(playerLayer!)
+        playerLayer!.frame=playerLayer!.bounds
+        print("AVLayerVideoGravity \(AVLayerVideoGravity.resizeAspectFill)")
+      
 //        if self.gpuMovie != nil {
 //            gpuMovie.endProcessing()
 //        }

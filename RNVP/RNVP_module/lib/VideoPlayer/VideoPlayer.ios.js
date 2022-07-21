@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { View, ViewPropTypes, requireNativeComponent, NativeModules, UIManager } from 'react-native';
-//import { getActualSource } from '../utils';
+import { getActualSource } from '../utils';
 const PLAYER_COMPONENT_NAME = 'RNVideoProcessing';
-//const { RNVideoTrimmer } = NativeModules;
+const { RNTrim } = NativeModules;
 
 //const ProcessingUI = UIManager.getViewManagerConfig('RNVideoProcessing');
 
@@ -53,7 +53,7 @@ export class VideoPlayer extends Component {
   constructor(...args) {
     super(...args);
     this.state = {};
-    //this.trim = this.trim.bind(this);
+    this.trim = this.trim.bind(this);
     //this.compress = this.compress.bind(this);
     //this.getPreviewForSecond = this.getPreviewForSecond.bind(this);
     this.getVideoInfo = this.getVideoInfo.bind(this);
@@ -92,30 +92,30 @@ export class VideoPlayer extends Component {
     this.props.onChange(event);
   }
 
-  // trim(options = {}) {
-  //   const availableQualities = Object.values(VideoPlayer.Constants.quality);
-  //   if (!options.hasOwnProperty('startTime')) {
-  //     // eslint-disable-next-line no-console
-  //     console.warn('Start time is not specified');
-  //   }
-  //   if (!options.hasOwnProperty('endTime')) {
-  //     // eslint-disable-next-line no-console
-  //     console.warn('End time is not specified');
-  //   }
-  //   if (options.hasOwnProperty('quality') && !availableQualities.includes(options.quality)) {
-  //     // eslint-disable-next-line no-console
-  //     console.warn('Quality is wrong, Please use VideoPlayer.Constants.quality');
-  //   }
-  //   const actualSource = getActualSource(this.props.source);
-  //   return new Promise((resolve, reject) => {
-  //     RNVideoTrimmer.trim(actualSource, options, (err, output) => {
-  //       if (err) {
-  //         return reject(err);
-  //       }
-  //       return resolve(output);
-  //     });
-  //   });
-  // }
+  trim(options = {}) {
+    const availableQualities = Object.values(VideoPlayer.Constants.quality);
+    if (!options.hasOwnProperty('startTime')) {
+      // eslint-disable-next-line no-console
+      console.warn('Start time is not specified');
+    }
+    if (!options.hasOwnProperty('endTime')) {
+      // eslint-disable-next-line no-console
+      console.warn('End time is not specified');
+    }
+    if (options.hasOwnProperty('quality') && !availableQualities.includes(options.quality)) {
+      // eslint-disable-next-line no-console
+      console.warn('Quality is wrong, Please use VideoPlayer.Constants.quality');
+    }
+    const actualSource = getActualSource(this.props.source);
+    return new Promise((resolve, reject) => {
+      RNTrim(actualSource, options, (err, output) => {
+        if (err) {
+          return reject(err);
+        }
+        return resolve(output);
+      });
+    });
+  }
 
   // compress(_options = {}) {
   //   const options = { ..._options };

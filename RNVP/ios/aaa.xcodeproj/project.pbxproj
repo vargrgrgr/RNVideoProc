@@ -73,6 +73,7 @@
 		1837503828890CA70035FFC2 /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
 		1837503928890CAD0035FFC2 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		1837503E2889153E0035FFC2 /* RNVideoProcessingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNVideoProcessingManager.swift; sourceTree = "<group>"; };
+		1887AB98288974AC0096040A /* RNTrim.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNTrim.swift; sourceTree = "<group>"; };
 		44B0CD1DB7D127FD3BD3DB96 /* Pods-aaa-aaaTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aaa-aaaTests.debug.xcconfig"; path = "Target Support Files/Pods-aaa-aaaTests/Pods-aaa-aaaTests.debug.xcconfig"; sourceTree = "<group>"; };
 		612389C982EFDE714054DEAF /* Pods-aaa.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aaa.release.xcconfig"; path = "Target Support Files/Pods-aaa/Pods-aaa.release.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = aaa/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -147,6 +148,7 @@
 		18374FDD28890BC60035FFC2 /* RNVideoProcessing */ = {
 			isa = PBXGroup;
 			children = (
+				1887AB98288974AC0096040A /* RNTrim.swift */,
 				18374FDE28890BC60035FFC2 /* RNIOVideo.h */,
 				1837503E2889153E0035FFC2 /* RNVideoProcessingManager.swift */,
 				18374FF028890BC60035FFC2 /* RNVideoProcessingBridge.m */,

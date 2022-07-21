@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {
-  View, Button, Dimensions, PixelRatio, TextInput, Text
+  View, Button, Dimensions, PixelRatio, TextInput, Text, StyleSheet
 } from 'react-native';
 import {VideoPlayer} from '../../RNVP_module';
 import Trimmer from '../../react-native-trimmer'
@@ -142,84 +142,93 @@ const initialTrimUnitSize = 5000;
       startT,
       trimfix,
     } = this.state;
-      return (
-          <View style={{ 
-            flex: 1,
-            flexDirection: 'column',
-            justifyContent: 'space-between'
-          }}>
-                <View style= {{
-                    
-                    flex: 0.8
-                }}>    
-                    <VideoPlayer
-                        ref={ref => this.videoPlayerRef = ref}
-                        startTime={this.state.startT/1000}  // seconds
-                        play={false}     // default false
-                        replay={false}   // should player play video again if it's ended
-                        rotate={false}   // use this prop to rotate video if it captured in landscape mode iOS only
-                        currentTime={scrubberPosition/1000}
-                        source={videoSource}
-                        resizemode={"AVLayerVideoGravityResizeAspect"}
-                        playerWidth={Dimensions.get('window').width * PixelRatio.get()/3}// iOS only 
-                        playerHeight={Dimensions.get('window').height * PixelRatio.get()/3}
-                        onChange={({ nativeEvent }) => console.log({ nativeEvent })} // get Current time on every second
-                    />
-                </View>
-                <View style={{ 
-                    flex: 0.2,
-                    flexDirection: 'column',
-                    justifyContent: 'space-between'
-                }}>
-                    <View style={{
-                        flex: 1,
-                    }}>
-                    </View>
-                    <View style={{
-                        flex: 1,
-                    }}>
-                        {
-                        playing
-                            ? <Button title="Pause" color="#f638dc" onPress={this.pauseScrubber}/>
-                            : <Button title="Play" color="#f638dc" onPress={this.playScrubber}/>
-                        }
-                    </View>
-                    <View style={{
-                        flex: 1,
-                    }}>
-                        {
-                        <Button title="Trim" color="#f638dc" onPress={this.trimVideo}/>
-                        }
-                    </View>
-                    
-                </View>
-                <View>
-                    <Trimmer
-                        onHandleChange= {this.onHandleChange}
-                        totalDuration={videoLength}
-                        trimmerLeftHandlePosition={trimmerLeftHandlePosition}
-                        trimmerRightHandlePosition={trimmerRightHandlePosition}
-                        minimumTrimDuration={minimumTrimDuration}
-                        maxTrimDuration={maxTrimDuration}
-                        maximumZoomLevel={200}
-                        zoomMultiplier={20}
-                        initialZoomValue={0.8}
-                        scaleInOnInit={true}
-                        tintColor="#f638dc"
-                        markerColor="#5a3d5c"
-                        trackBackgroundColor="#382039"
-                        trackBorderColor="#5a3d5c"
-                        scrubberColor="#b7e778"
-                        scrubberPosition={scrubberPosition}
-                        onScrubbingComplete={this.onScrubbingComplete}
-                        onLeftHandlePressIn={() => console.log('LeftHandlePressIn')}
-                        onRightHandlePressIn={() => console.log('RightHandlePressIn')}
-                        onScrubberPressIn={() => console.log('onScrubberPressIn')}
-                    />
-                </View>
+
+
+  return (
+      <View style={styles.container}>
+          <View style={styles.videoview}>
+            <VideoPlayer
+              ref={ref => this.videoPlayerRef = ref}
+              startTime={this.state.startT/1000}  // seconds
+              play={false}     // default false
+              replay={false}   // should player play video again if it's ended
+              rotate={false}   // use this prop to rotate video if it captured in landscape mode iOS only
+              background_Color={'Black'}
+              currentTime={scrubberPosition/1000}
+              source={videoSource}
+              resizemode={"AVLayerVideoGravityResizeAspectFill"}
+              onChange={({ nativeEvent }) => console.log({ nativeEvent })} // get Current time on every second
+            />
+          </View>
+          <View style={styles.buttonsview}>
+            <View style={styles.button}>
+            {
+              playing? 
+              <Button title="Pause" color="#f638dc" onPress={this.pauseScrubber}/> : 
+              <Button title="Play" color="#f638dc" onPress={this.playScrubber}/>
+            }
             </View>
+            <View style={styles.button}>
+            {
+              <Button title="Trim" color="#f638dc" onPress={this.trimVideo}/>
+            }
+            </View>
+          
+          </View>
+          <View style={styles.trimmer}>
+            <Trimmer
+            onHandleChange= {this.onHandleChange}
+            totalDuration={videoLength}
+            trimmerLeftHandlePosition={trimmerLeftHandlePosition}
+            trimmerRightHandlePosition={trimmerRightHandlePosition}
+            minimumTrimDuration={minimumTrimDuration}
+            maxTrimDuration={maxTrimDuration}
+            maximumZoomLevel={200}
+            zoomMultiplier={20}
+            initialZoomValue={0.8}
+            scaleInOnInit={true}
+            tintColor="#f638dc"
+            markerColor="#5a3d5c"
+            trackBackgroundColor="#382039"
+            trackBorderColor="#5a3d5c"
+            scrubberColor="#b7e778"
+            scrubberPosition={scrubberPosition}
+            onScrubbingComplete={this.onScrubbingComplete}
+            onLeftHandlePressIn={() => console.log('LeftHandlePressIn')}
+            onRightHandlePressIn={() => console.log('RightHandlePressIn')}
+            onScrubberPressIn={() => console.log('onScrubberPressIn')}
+            />
+          </View>
+      </View>        
       );
     }
-};
 
+
+};
 export default VideoProcScreen;
+
+const styles = StyleSheet.create({
+    container:{
+      flex:1,
+      justifyContent: 'space-around'
+    },
+    videoview:{
+      flex:1.5
+    },
+    buttonsview:{
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      flex:0.2
+    },
+    trimmerview:{
+
+      flex:0.1
+    },
+    button:{
+      width:50,
+      height:40,
+      opacity: 50,
+      borderRadius: 15,
+      backgroundColor:'white'
+    }
+  })

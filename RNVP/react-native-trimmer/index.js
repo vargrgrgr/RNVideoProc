@@ -25,7 +25,7 @@ const SCALE_ON_INIT_TYPE = 'trim-duration'
 const SHOW_SCROLL_INDICATOR = true
 const CENTER_ON_LAYOUT = true
 const TRACK_PADDING_OFFSET = 10;
-const HANDLE_WIDTHS = 30;
+const HANDLE_WIDTHS = 10;
 
 const MARKER_INCREMENT = 5000;
 const SPECIAL_MARKER_INCREMEMNT = 5;
@@ -53,8 +53,8 @@ export default class Trimmer extends React.Component {
       const smartScaleDivider = isMaxDuration ? 3 : 5; // Based on testing, 3 works better when the goal is to have the entire trimmer fit in the visible area
       const percentTrimmed = trimDuration / props.totalDuration;
       //const smartScaleValue = (2 / percentTrimmed) / smartScaleDivider;
-      const smartScaleValue = 0.8;//Testing scale value
-      trackScale = this.clamp({ value: smartScaleValue, min: 0.8, max: props.maximumZoomLevel || MAXIMUM_SCALE_VALUE})
+      const smartScaleValue = 1;//Testing scale value
+      //trackScale = this.clamp({ value: smartScaleValue, min: 0.8, max: props.maximumZoomLevel || MAXIMUM_SCALE_VALUE})
     }
 
     this.initiateAnimator();
@@ -459,12 +459,10 @@ export default class Trimmer extends React.Component {
                     styles.scrubberContainer,
                     { left: actualScrubPosition },
                   ]} 
-                  hitSlop={{top: 8, bottom: 8, right: 8, left: 8}}
+                  hitSlop={{top: 0, bottom: 0, right: 0, left: 0}}
                   {...this.scrubHandlePanResponder.panHandlers}
                 >
-                  <View
-                    style={[styles.scrubberHead, { backgroundColor: scrubberColor }]}
-                  />
+
                   <View style={[styles.scrubberTail, { backgroundColor: scrubberColor }]} />
                 </View>
               )
@@ -508,28 +506,28 @@ const styles = StyleSheet.create({
   },
   trackBackground: {
     overflow: 'hidden',
-    marginVertical: 20,
+    marginVertical: 89,
     backgroundColor: TRACK_BACKGROUND_COLOR,
     borderRadius: 5,
     borderWidth: 1,
     borderColor: TRACK_BORDER_COLOR,
-    height: 100,
-    marginHorizontal: HANDLE_WIDTHS + TRACK_PADDING_OFFSET,
+    height: 50,
+    marginHorizontal: HANDLE_WIDTHS + TRACK_PADDING_OFFSET+11,
   },
   trimmer: {
     position: 'absolute',
     left: TRACK_PADDING_OFFSET,
-    top: 17,
+    top: 87,
     borderColor: TINT_COLOR,
     borderWidth: 3,
-    height: 106,
+    height: 53,
   },
   handle: {
     position: 'absolute',
     width: HANDLE_WIDTHS,
-    height: 106,
+    height: 53,
     backgroundColor: TINT_COLOR,
-    top: 17,
+    top: 87,
   },
   leftHandle: {
     borderTopLeftRadius: 10,
@@ -575,15 +573,17 @@ const styles = StyleSheet.create({
   scrubberHead: {
     position: 'absolute',
     backgroundColor: SCRUBBER_COLOR,
+    opacity: 100,
     width: 14,
     height: 14,
     borderRadius: 14,
   },
   scrubberTail: {
     backgroundColor: SCRUBBER_COLOR,
-    height: 123,
+    height: 49,
     width: 3,
-    borderBottomLeftRadius: 3,
-    borderBottomRightRadius: 3,
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
+    top: 88,
   },
 });
