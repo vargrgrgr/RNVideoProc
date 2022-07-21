@@ -3,10 +3,7 @@ import {
   View, Button, StyleSheet,
 } from 'react-native';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker'
-
 function SelectVideoScreen ({navigation}) {
-  componentDidMount();
-
   const recordVideo = () => {
     const options = {
       title: '영상 녹화',
@@ -25,7 +22,7 @@ function SelectVideoScreen ({navigation}) {
         }).value;
         Vduration= response.assets[0].duration;
         console.log(Vduration);
-        navigation.navigate('VideoProc', {local_path: path}, {duration: Vduration});
+        //navigation.navigate('VideoProc', {local_path: path}, {duration: Vduration});
       }
     });
   };

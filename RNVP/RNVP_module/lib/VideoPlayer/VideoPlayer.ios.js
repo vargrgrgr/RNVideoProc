@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { View, ViewPropTypes, requireNativeComponent, NativeModules, UIManager } from 'react-native';
 //import { getActualSource } from '../utils';
+const PLAYER_COMPONENT_NAME = 'RNVideoProcessing';
+//const { RNVideoTrimmer } = NativeModules;
 
-const { RNVideoProcessing } = NativeModules;
-
-const ProcessingUI = UIManager.getViewManagerConfig('RNVideoProcessing');
+//const ProcessingUI = UIManager.getViewManagerConfig('RNVideoProcessing');
 
 export class VideoPlayer extends Component {
   static propTypes = {
@@ -29,11 +29,11 @@ export class VideoPlayer extends Component {
     play: false,
     replay: false,
     rotate: false,
-    resizeMode: ProcessingUI.Constants.ScaleNone,
     volume: 0.0,
     currentTime: 0,
     startTime: 0,
   };
+  
 
   static Constants = {
     quality: {
@@ -47,12 +47,7 @@ export class VideoPlayer extends Component {
       QUALITY_3840x2160: '3840x2160', // available in iOS 9
       QUALITY_PASS_THROUGH: 'passthrough', // does not change quality
     },
-    resizeMode: {
-      CONTAIN: ProcessingUI.Constants.ScaleAspectFit,
-      COVER: ProcessingUI.Constants.ScaleAspectFill,
-      STRETCH: ProcessingUI.Constants.ScaleToFill,
-      NONE: ProcessingUI.Constants.ScaleNone
-    }
+
   };
 
   constructor(...args) {
@@ -65,18 +60,18 @@ export class VideoPlayer extends Component {
     this._onChange = this._onChange.bind(this);
   }
 
-  getPreviewForSecond(forSecond = 0, maximumSize, format = 'base64') {
-    //const actualSource = getActualSource(this.props.source);
-    return new Promise((resolve, reject) => {
-      RNVideoTrimmer.getPreviewImageAtPosition(this.props.source, forSecond, maximumSize, format,
-        (err, base64) => {
-          if (err) {
-            return reject(err);
-          }
-          return resolve(base64);
-        });
-    });
-  }
+  // getPreviewForSecond(forSecond = 0, maximumSize, format = 'base64') {
+  //   //const actualSource = getActualSource(this.props.source);
+  //   return new Promise((resolve, reject) => {
+  //     RNVideoTrimmer.getPreviewImageAtPosition(this.props.source, forSecond, maximumSize, format,
+  //       (err, base64) => {
+  //         if (err) {
+  //           return reject(err);
+  //         }
+  //         return resolve(base64);
+  //       });
+  //   });
+  // }
 
    getVideoInfo() {
     //const actualSource = getActualSource(this.props.source);
@@ -176,15 +171,8 @@ export class VideoPlayer extends Component {
       resizeMode,
       ...viewProps
     } = this.props;
-
-    if (__DEV__) {
-      const isCompatible = Object
-        .values(VideoPlayer.Constants.resizeMode)
-        .includes(resizeMode);
-      if (!isCompatible) {
-        console.warn('Wrong resizeMode property, please use VideoPlayer.Constants.resizeMode constants');
-      }
-    }
+    console.log(playerWidth)
+    console.log(playerHeight)
 
     //const actualSource = getActualSource(source);
     return (
@@ -196,16 +184,16 @@ export class VideoPlayer extends Component {
         volume={volume}
         playerWidth={playerWidth}
         playerHeight={playerHeight}
-        currentTime={currentTime}
+        currentTime={currentTime}ƒ
         background_Color={backgroundColor}
         startTime={startTime}
         endTime={endTime}
+        resizeMode={"AVLayerVideoGravityResizeAspect"}
         onChange={this._onChange}
-        resizeMode={resizeMode}
         {...viewProps}
       />
     );
   }
 }
 
-const RNVideoPlayer = requireNativeComponent(RNVideoProcessing, VideoPlayer);
+const RNVideoPlayer = requireNativeComponent(PLAYER_COMPONENT_NAME, VideoPlayer);

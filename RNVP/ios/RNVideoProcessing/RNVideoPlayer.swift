@@ -6,6 +6,7 @@
 
 import Foundation
 import AVFoundation
+
 //import GPUImage
 
 
@@ -13,11 +14,9 @@ import AVFoundation
 class RNVideoPlayer: RCTView {
     
   //let processingFilters: VideoProcessingGPUFilters = VideoProcessingGPUFilters()
-  
   var playerVolume: NSNumber = 0
   var player: AVPlayer! = nil
   var playerLayer: AVPlayerLayer?
-  
   var playerCurrentTimeObserver: Any! = nil
   var playerItem: AVPlayerItem! = nil
 //  var gpuMovie: GPUImageMovie! = nil
@@ -39,6 +38,18 @@ class RNVideoPlayer: RCTView {
   @objc var onChange: RCTBubblingEventBlock?
   
   let LOG_KEY: String = "VIDEO_PROCESSING"
+  
+  enum QUALITY_ENUM: String {
+    case QUALITY_LOW = "low"
+    case QUALITY_MEDIUM = "medium"
+    case QUALITY_HIGHEST = "highest"
+    case QUALITY_640x480 = "640x480"
+    case QUALITY_960x540 = "960x540"
+    case QUALITY_1280x720 = "1280x720"
+    case QUALITY_1920x1080 = "1920x1080"
+    case QUALITY_3840x2160 = "3840x2160"
+    case QUALITY_PASS_THROUGH = "passthrough"
+  }
   
   @objc func setSource(_ val: NSString) {
     source = val
@@ -71,7 +82,7 @@ class RNVideoPlayer: RCTView {
     volume = val
   }
   @objc func setResizeMode(_ val: NSString) {
-    resizeMode = val
+    //resizeMode = val
   }
     
     // props
@@ -103,10 +114,9 @@ class RNVideoPlayer: RCTView {
             guard let newValue = newValue as String? else {
                 return
             }
-            self._resizeMode = AVLayerVideoGravity(rawValue: newValue)
+          self._resizeMode = AVLayerVideoGravity.resizeAspect
             self.playerLayer?.videoGravity = self._resizeMode
             self.setNeedsLayout()
-            print("CHANGED: resizeMode \(newValue)")
         }
         get {
             return nil
@@ -598,6 +608,7 @@ class RNVideoPlayer: RCTView {
   }
     // start player
     func startPlayer() {
+        
         self.backgroundColor = UIColor.darkGray
         
         let movieURL = NSURL(string: _moviePathSource as String)
@@ -610,16 +621,17 @@ class RNVideoPlayer: RCTView {
         player.replaceCurrentItem(with: playerItem)
         
         // MARK - Temporary removing playeLayer, it dublicates video if it's in landscape mode
-                playerLayer = AVPlayerLayer(player: player)
-                playerLayer!.videoGravity = self._resizeMode
-                playerLayer!.masksToBounds = true
-                playerLayer!.removeFromSuperlayer()		
+                // playerLayer = AVPlayerLayer(player: player)
+                // playerLayer!.videoGravity = self._resizeMode
+                // playerLayer!.masksToBounds = true
+                // playerLayer!.removeFromSuperlayer()		
         
         print("CHANGED playerframe \(playerLayer), frameAAA \(playerLayer?.frame)")
         self.setNeedsLayout()
         
         self._playerEndTime = CGFloat(CMTimeGetSeconds((player.currentItem?.asset.duration)!))
         print("CHANGED playerEndTime \(self._playerEndTime)")
+        print("AVLayerVideoGravity \(AVLayerVideoGravity.resizeAspect)")
         
 //        if self.gpuMovie != nil {
 //            gpuMovie.endProcessing()
@@ -675,7 +687,7 @@ class RNVideoPlayer: RCTView {
      }
      */
 }
-//
+//ƒ
 //  RNVideoPlayer.swift
 //  RNVideoProcessing
 //

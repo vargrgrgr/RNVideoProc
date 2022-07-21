@@ -4,3 +4,4 @@
 #import "React/RCTBridgeModule.h"
 
 #endif /* RNVideoProcessing_Bridging_Header_h */
+	

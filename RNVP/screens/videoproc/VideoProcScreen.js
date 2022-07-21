@@ -14,6 +14,7 @@ const scrubInterval = 50;
 const initialTrimUnitSize = 5000;
 
 
+
  class VideoProcScreen extends Component {
    
   state = {
@@ -159,9 +160,9 @@ const initialTrimUnitSize = 5000;
                         rotate={false}   // use this prop to rotate video if it captured in landscape mode iOS only
                         currentTime={scrubberPosition/1000}
                         source={videoSource}
+                        resizemode={"AVLayerVideoGravityResizeAspect"}
                         playerWidth={Dimensions.get('window').width * PixelRatio.get()/3}// iOS only 
                         playerHeight={Dimensions.get('window').height * PixelRatio.get()/3}
-                        resizeMode={VideoPlayer.Constants.resizeMode.COVER}
                         onChange={({ nativeEvent }) => console.log({ nativeEvent })} // get Current time on every second
                     />
                 </View>
