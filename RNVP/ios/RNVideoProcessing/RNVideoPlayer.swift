@@ -397,7 +397,189 @@ class RNVideoPlayer: RCTView {
             self.onChange!(event)
         }
     }
-    
+    func getQualityForAsset(quality: String, asset: AVAsset) -> String {
+      var useQuality: String
+
+      switch quality {
+        case QUALITY_ENUM.QUALITY_LOW.rawValue:
+          useQuality = AVAssetExportPresetLowQuality
+
+        case QUALITY_ENUM.QUALITY_MEDIUM.rawValue:
+          useQuality = AVAssetExportPresetMediumQuality
+
+        case QUALITY_ENUM.QUALITY_HIGHEST.rawValue:
+          useQuality = AVAssetExportPresetHighestQuality
+
+        case QUALITY_ENUM.QUALITY_640x480.rawValue:
+          useQuality = AVAssetExportPreset640x480
+
+        case QUALITY_ENUM.QUALITY_960x540.rawValue:
+          useQuality = AVAssetExportPreset960x540
+
+        case QUALITY_ENUM.QUALITY_1280x720.rawValue:
+          useQuality = AVAssetExportPreset1280x720
+
+        case QUALITY_ENUM.QUALITY_1920x1080.rawValue:
+          useQuality = AVAssetExportPreset1920x1080
+
+        case QUALITY_ENUM.QUALITY_3840x2160.rawValue:
+          if #available(iOS 9.0, *) {
+            useQuality = AVAssetExportPreset3840x2160
+          } else {
+            useQuality = AVAssetExportPresetPassthrough
+          }
+
+        default:
+          useQuality = AVAssetExportPresetPassthrough
+      }
+
+      let compatiblePresets = AVAssetExportSession.exportPresets(compatibleWith: asset)
+      if !compatiblePresets.contains(useQuality) {
+        useQuality = AVAssetExportPresetPassthrough
+      }
+      return useQuality
+    }
+    func trim(_ source: String, options: NSDictionary, callback: @escaping RCTResponseSenderBlock) {
+
+        var sTime:Float?
+        var eTime:Float?
+        if let num = options.object(forKey: "startTime") as? NSNumber {
+            sTime = num.floatValue
+        }
+        if let num = options.object(forKey: "endTime") as? NSNumber {
+            eTime = num.floatValue
+        }
+
+        let quality = ((options.object(forKey: "quality") as? String) != nil) ? options.object(forKey: "quality") as! String : ""
+        let saveToCameraRoll = options.object(forKey: "saveToCameraRoll") as? Bool ?? false
+        let saveWithCurrentDate = options.object(forKey: "saveWithCurrentDate") as? Bool ?? false
+
+        let manager = FileManager.default
+        guard let documentDirectory = try? manager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+            else {
+                callback(["Error creating FileManager", NSNull()])
+                return
+        }
+
+        let sourceURL = getSourceURL(source: source)
+        let asset = AVAsset(url: sourceURL as URL)
+
+        asset.loadValuesAsynchronously(forKeys: [ "exportable", "tracks" ]) {
+          precondition(asset.statusOfValue(forKey: "exportable", error: nil) == .loaded)
+          precondition(asset.statusOfValue(forKey: "tracks", error: nil) == .loaded)
+          precondition(asset.isExportable)
+
+          if eTime == nil {
+              eTime = Float(asset.duration.seconds)
+          }
+          if sTime == nil {
+              sTime = 0
+          }
+
+          let startTime = CMTime(seconds: Double(sTime!), preferredTimescale: 1000)
+          let endTime = CMTime(seconds: Double(eTime!), preferredTimescale: 1000)
+          let timeRange = CMTimeRange(start: startTime, end: endTime)
+
+          let composition = AVMutableComposition()
+          let track = composition.addMutableTrack(withMediaType: .video, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
+          let videoOrientation = self.getVideoOrientationFromAsset(asset: asset)
+
+          if ( videoOrientation == .up  ) {
+            var transforms: CGAffineTransform?
+            transforms = track?.preferredTransform
+            transforms = CGAffineTransform(rotationAngle: 0)
+            transforms = transforms?.concatenating(CGAffineTransform(rotationAngle: CGFloat(90.0 * .pi / 180)))
+            track?.preferredTransform = transforms!
+          }
+          else if ( videoOrientation == .down ) {
+            var transforms: CGAffineTransform?
+            transforms = track?.preferredTransform
+            transforms = CGAffineTransform(rotationAngle: 0)
+            transforms = transforms?.concatenating(CGAffineTransform(rotationAngle: CGFloat(270.0 * .pi / 180)))
+            track?.preferredTransform = transforms!
+          }
+          else if ( videoOrientation == .left ) {
+            var transforms: CGAffineTransform?
+            transforms = track?.preferredTransform
+            transforms = CGAffineTransform(rotationAngle: 0)
+            transforms = transforms?.concatenating(CGAffineTransform(rotationAngle: CGFloat(180.0 * .pi / 180)))
+            track?.preferredTransform = transforms!
+          }
+
+          do {
+            try composition.insertTimeRange(timeRange, of: asset, at: CMTime.zero)
+          } catch {
+            callback(["Error inserting time range", NSNull()])
+            // Error handling code here
+            return
+          }
+
+          var outputURL = documentDirectory.appendingPathComponent("output")
+          do {
+              try manager.createDirectory(at: outputURL, withIntermediateDirectories: true, attributes: nil)
+              let name = self.randomString()
+              outputURL = outputURL.appendingPathComponent("\(name).mp4")
+          } catch {
+              callback([error.localizedDescription, NSNull()])
+              print(error)
+          }
+
+          //Remove existing file
+          _ = try? manager.removeItem(at: outputURL)
+
+          let finalComposition = composition.copy() as! AVComposition
+          let useQuality = self.getQualityForAsset(quality: quality, asset: asset)
+
+          print("RNVideoTrimmer passed quality: \(quality). useQuality: \(useQuality)")
+
+          guard let exportSession = AVAssetExportSession(asset: finalComposition, presetName: useQuality)
+              else {
+                  callback(["Error creating AVAssetExportSession", NSNull()])
+                  return
+          }
+          exportSession.outputURL = NSURL.fileURL(withPath: outputURL.path)
+          exportSession.outputFileType = .mp4
+          exportSession.shouldOptimizeForNetworkUse = true
+
+          if saveToCameraRoll && saveWithCurrentDate {
+            let metaItem = AVMutableMetadataItem()
+            metaItem.key = AVMetadataKey.commonKeyCreationDate as (NSCopying & NSObjectProtocol)
+            metaItem.keySpace = .common
+            metaItem.value = NSDate()
+            exportSession.metadata = [metaItem]
+          }
+
+
+
+          exportSession.timeRange = timeRange
+          exportSession.exportAsynchronously{
+              switch exportSession.status {
+              case .completed:
+                  callback( [NSNull(), outputURL.absoluteString] )
+                  if saveToCameraRoll {
+                      UISaveVideoAtPathToSavedPhotosAlbum(outputURL.relativePath, self, nil, nil)
+                  }
+
+              case .failed:
+                  callback( ["Failed: \(exportSession.error)", NSNull()] )
+
+              case .cancelled:
+                  callback( ["Cancelled: \(exportSession.error)", NSNull()] )
+
+              default: break
+              }
+          }
+        }
+    }
+  func randomString() -> String {
+    let letters: NSString = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+    let randomString: NSMutableString = NSMutableString(capacity: 20)
+    let s:String = "RNTrimmer-Temp-Video"
+    for _ in 0...19 {
+      randomString.appendFormat("%C", letters.character(at: Int(arc4random_uniform(UInt32(letters.length)))))
+    }
+    return s.appending(randomString as String)
+  }
     // start player
     func startPlayer() {
         self.backgroundColor = UIColor.darkGray
