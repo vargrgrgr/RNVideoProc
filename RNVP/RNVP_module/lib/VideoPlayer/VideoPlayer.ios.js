@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { View, ViewPropTypes, requireNativeComponent, NativeModules, UIManager } from 'react-native';
 //import { getActualSource } from '../utils';
 
-const { RNVideoTrimmer } = NativeModules;
+const { RNVideoProcessing } = NativeModules;
 
 const ProcessingUI = UIManager.getViewManagerConfig('RNVideoProcessing');
 
@@ -58,9 +58,9 @@ export class VideoPlayer extends Component {
   constructor(...args) {
     super(...args);
     this.state = {};
-    this.trim = this.trim.bind(this);
-    this.compress = this.compress.bind(this);
-    this.getPreviewForSecond = this.getPreviewForSecond.bind(this);
+    //this.trim = this.trim.bind(this);
+    //this.compress = this.compress.bind(this);
+    //this.getPreviewForSecond = this.getPreviewForSecond.bind(this);
     this.getVideoInfo = this.getVideoInfo.bind(this);
     this._onChange = this._onChange.bind(this);
   }
@@ -78,10 +78,10 @@ export class VideoPlayer extends Component {
     });
   }
 
-  getVideoInfo() {
+   getVideoInfo() {
     //const actualSource = getActualSource(this.props.source);
     return new Promise((resolve, reject) => {
-      RNVideoTrimmer.getAssetInfo(this.props.source, (err, info) => {
+      RNVideoPlayer.getAssetInfo(this.props.source, (err, info) => {
         if (err) {
           return reject(err);
         }

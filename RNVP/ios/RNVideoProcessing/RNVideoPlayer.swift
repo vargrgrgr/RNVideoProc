@@ -6,7 +6,7 @@
 
 import Foundation
 import AVFoundation
-import GPUImage
+//import GPUImage
 
 
 @objc(RNVideoPlayer)
@@ -25,7 +25,7 @@ class RNVideoPlayer: RCTView {
 //  var phantomGpuMovie: GPUImageMovie! = nil
 //  var phantomFilterView: GPUImageView = GPUImageView()
 //
-  let filterView: GPUImageView = GPUImageView()
+  //let filterView: GPUImageView = GPUImageView()
   
   var _playerHeight: CGFloat = UIScreen.main.bounds.width * 4 / 3
   var _playerWidth: CGFloat = UIScreen.main.bounds.width
@@ -261,6 +261,7 @@ class RNVideoPlayer: RCTView {
             return nil
         }
     }
+  
     
     var rotate: NSNumber? {
         set(val) {
@@ -268,20 +269,19 @@ class RNVideoPlayer: RCTView {
                 self._rotate = RCTConvert.bool(val!)
                 var rotationAngle: CGFloat = 0
                 if self._rotate {
-                    filterView.frame.size.width = self._playerHeight
-                    filterView.frame.size.height = self._playerWidth
-                    filterView.bounds.size.width = self._playerHeight
-                    filterView.bounds.size.height = self._playerWidth
+                    playerLayer?.frame.size.width = self._playerHeight
+                    playerLayer?.frame.size.height = self._playerWidth
+                    playerLayer?.bounds.size.width = self._playerHeight
+                    playerLayer?.bounds.size.height = self._playerWidth
                     rotationAngle = CGFloat.pi / 2
                 } else {
-                    filterView.frame.size.width = self._playerWidth
-                    filterView.frame.size.height = self._playerHeight
-                    filterView.bounds.size.width = self._playerWidth
-                    filterView.bounds.size.height = self._playerHeight
+                    playerLayer?.frame.size.width = self._playerWidth
+                    playerLayer?.frame.size.height = self._playerHeight
+                    playerLayer?.bounds.size.width = self._playerWidth
+                    playerLayer?.bounds.size.height = self._playerHeight
                 }
-                filterView.frame.origin = CGPoint.zero
-                self.filterView.transform = CGAffineTransform(rotationAngle: rotationAngle)
-                playerLayer?.frame = filterView.bounds
+                playerLayer?.frame.origin = CGPoint.zero
+                self.playerLayer?.transform = CATransform3DMakeAffineTransform(CGAffineTransform(rotationAngle: rotationAngle))
                 self.setNeedsLayout()
                 self.layoutIfNeeded()
             }
@@ -325,6 +325,26 @@ class RNVideoPlayer: RCTView {
 //            print("CREATED: Preview: Hue: \(toBase64(image: huePreview!))")
 //        }
 //    }
+    func getAssetInfo(_ source: String, callback: RCTResponseSenderBlock) {
+      let sourceURL = getSourceURL(source: source)
+      let asset = AVAsset(url: sourceURL)
+      var assetInfo: [String: Any] = [
+        "duration" : asset.duration.seconds
+      ]
+      if let track = asset.tracks(withMediaType: .video).first {
+        let naturalSize = track.naturalSize
+        let t = track.preferredTransform
+        let isPortrait = t.a == 0 && abs(t.b) == 1 && t.d == 0
+        let size = [
+          "width": isPortrait ? naturalSize.height : naturalSize.width,
+          "height": isPortrait ? naturalSize.width : naturalSize.height
+        ]
+        assetInfo["size"] = size
+        assetInfo["frameRate"] = Int(round(track.nominalFrameRate))
+        assetInfo["bitrate"] = Int(round(track.estimatedDataRate))
+      }
+      callback( [NSNull(), assetInfo] )
+    }
     
     func toBase64(image: UIImage) -> String {
         let imageData:NSData = image.pngData()! as NSData
@@ -383,11 +403,9 @@ class RNVideoPlayer: RCTView {
         
         // MARK - Temporary removing playeLayer, it dublicates video if it's in landscape mode
                 playerLayer = AVPlayerLayer(player: player)
-                playerLayer!.frame = filterView.bounds
                 playerLayer!.videoGravity = self._resizeMode
                 playerLayer!.masksToBounds = true
-                playerLayer!.removeFromSuperlayer()
-                filterView.layer.addSublayer(playerLayer!)
+                playerLayer!.removeFromSuperlayer()		
         
         print("CHANGED playerframe \(playerLayer), frameAAA \(playerLayer?.frame)")
         self.setNeedsLayout()

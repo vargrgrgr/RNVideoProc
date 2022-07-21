@@ -6,13 +6,6 @@
 //
 #import "RNIOVideo.h"
 
-@interface RNIOVideo : NSObject
-{
- 
-};
-
-@end
-
 @implementation RNIOVideo
 + (int)encode_frame:(AVCodecContext*)codecContext frame:(AVFrame*)frame packet:(AVPacket*)packet{
   int ret = -1;

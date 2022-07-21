@@ -9,7 +9,7 @@ import Foundation
 import AVFoundation
 import UIKit
 import FFmpeg
-import RNIOVideo
+import "RNIOVideo.h"
 
 enum QUALITY_ENUM: String {
   case QUALITY_LOW = "low"
@@ -44,7 +44,7 @@ class RNVideoTrimmer: NSObject {
         guard let documentDirectory = try? manager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
             else {
                 callback(["Error creating FileManager", NSNull()])
-                return
+                return#imageLiteral(resourceName: "simulator_screenshot_E2DED635-88F7-461C-BA43-0B999C09D0C6.png")
         }
 
         let sourceURL = getSourceURL(source: source)

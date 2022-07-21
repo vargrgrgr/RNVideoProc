@@ -6,16 +6,16 @@
 //
 
 import Foundation
-import GPUImage
+//import GPUImage
 
 class VideoProcessingGPUFilters {
   let filters = [
-    "saturation": GPUImageSaturationFilter(),
-    "sepia": GPUImageSepiaFilter(),
-    "pixelate": GPUImagePixellateFilter(),
-    "hue": GPUImageHueFilter(),
-    "vignette": GPUImageVignetteFilter(),
-    "guassianBlur": GPUImageGaussianBlurFilter()
+//    "saturation": GPUImageSaturationFilter(),
+//    "sepia": GPUImageSepiaFilter(),
+//    "pixelate": GPUImagePixellateFilter(),
+//    "hue": GPUImageHueFilter(),
+//    "vignette": GPUImageVignetteFilter(),
+//    "guassianBlur": GPUImageGaussianBlurFilter()
   ]
 
   // TODO: add more filters
