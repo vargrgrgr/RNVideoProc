@@ -8,11 +8,6 @@ function App() {
 
   return (
     <>
-      <StatusBar
-        animated
-        backgroundColor={'#FFFFFF'}
-        barStyle="dark-content"
-      />
       <NavigationContainer>
         <StackNavigation />
       </NavigationContainer>

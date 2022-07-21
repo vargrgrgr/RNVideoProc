@@ -580,6 +580,22 @@ class RNVideoPlayer: RCTView {
     }
     return s.appending(randomString as String)
   }
+  func getVideoOrientationFromAsset(asset : AVAsset) -> UIImage.Orientation {
+    let videoTrack: AVAssetTrack? = asset.tracks(withMediaType: .video)[0]
+    let size = videoTrack!.naturalSize
+
+    let txf: CGAffineTransform = videoTrack!.preferredTransform
+
+    if (size.width == txf.tx && size.height == txf.ty) {
+      return .left;
+    } else if (txf.tx == 0 && txf.ty == 0) {
+      return .right;
+    } else if (txf.tx == 0 && txf.ty == size.width) {
+      return .down;
+    } else {
+      return .up;
+    }
+  }
     // start player
     func startPlayer() {
         self.backgroundColor = UIColor.darkGray
