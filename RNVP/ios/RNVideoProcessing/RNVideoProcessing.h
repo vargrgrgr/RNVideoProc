@@ -7,6 +7,5 @@
 #define RNVideoProcessing_h
 
 #import "React/RCTView.h"
-#import "RNIOVideo.h"
 
 #endif /* RNVideoProcessing_h */

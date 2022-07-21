@@ -6,8 +6,6 @@
 
 import Foundation
 import AVFoundation
-//import GPUImage
-
 
 @objc(RNVideoPlayer)
 class RNVideoPlayer: RCTView {
@@ -448,8 +446,25 @@ class RNVideoPlayer: RCTView {
       }
       return useQuality
     }
-    func trim(_ source: String, options: NSDictionary, callback: @escaping RCTResponseSenderBlock) {
-      //RNTrim.ffmpeg_trim(source, options, startTime, endTime)
+    func trim( source: NSString, startTime: CGFloat, endTime: CGFloat, callback: @escaping RCTResponseSenderBlock){
+      let manager = FileManager.default
+      guard let documentDirectory = try? manager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+        else {
+          callback(["Error creating FileManager", NSNull()])
+          return
+      }
+      var outputURL = documentDirectory.appendingPathComponent("output")
+      do {
+        try manager.createDirectory(at: outputURL, withIntermediateDirectories: true, attributes: nil)
+        let name = randomString()
+        outputURL = outputURL.appendingPathComponent("\(name).mp4")
+      } catch {
+        callback([error.localizedDescription, NSNull()])
+        print(error)
+      }
+      let path = UnsafeMutablePointer<Int8>(mutating: (source).utf8String)
+      let outputpath = UnsafeMutablePointer<Int8>(mutating: (outputURL.path as NSString).utf8String)
+      RNIOVideo.ffmpeg_trim(path, outputP: outputpath, startTime: startTime, endTime: endTime)
     }
   func randomString() -> String {
     let letters: NSString = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
@@ -509,22 +524,6 @@ class RNVideoPlayer: RCTView {
         self.layer.addSublayer(playerLayer!)
         playerLayer!.frame=playerLayer!.bounds
         print("AVLayerVideoGravity \(AVLayerVideoGravity.resizeAspectFill)")
-      
-//        if self.gpuMovie != nil {
-//            gpuMovie.endProcessing()
-//        }
-//        gpuMovie = GPUImageMovie(playerItem: playerItem)
-//        // gpuMovie.runBenchmark = true
-//        gpuMovie.playAtActualSpeed = true
-//        gpuMovie.startProcessing()
-//
-//        gpuMovie.addTarget(self.filterView)
-//        if !self.isInitialized {
-//            self.addSubview(filterView)
-//            self.createPlayerObservers()
-//        }
-//        gpuMovie.playAtActualSpeed = true
-        
         self.isInitialized = true
     }
     
@@ -537,36 +536,10 @@ class RNVideoPlayer: RCTView {
             }
             if player != nil {
                 self.player.pause()
-//                self.gpuMovie.cancelProcessing()
                 self.player = nil
-//                self.gpuMovie = nil
                 print("CHANGED: Removing Observer, that can be a cause of memory leak")
             }
         }
     }
-    /* @TODO: create Preview images before the next Release
-     func createPhantomGPUView() {
-     phantomGpuMovie = GPUImageMovie(playerItem: self.playerItem)
-     phantomGpuMovie.playAtActualSpeed = true
-     
-     let hueFilter = self.processingFilters.getFilterByName(name: "saturation")
-     phantomGpuMovie.addTarget(hueFilter)
-     phantomGpuMovie.startProcessing()
-     hueFilter?.addTarget(phantomFilterView)
-     hueFilter?.useNextFrameForImageCapture()
-     let CGImage = hueFilter?.newCGImageFromCurrentlyProcessedOutput()
-     print("CREATED: CGImage \(CGImage)")
-     if CGImage != nil {
-     print("CREATED: \(UIImage(cgImage: (CGImage?.takeUnretainedValue() )!))")
-     }
-     // let image = UIImage(cgImage: (hueFilter?.newCGImageFromCurrentlyProcessedOutput().takeRetainedValue())!)
-     
-     }
-     */
 }
-//ƒ
-//  RNVideoPlayer.swift
-//  RNVideoProcessing
-//
-//  Created by Shahen Hovhannisyan on 11/14/16.
 
