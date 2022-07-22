@@ -464,9 +464,11 @@ class RNVideoPlayer: RCTView {
       }
       let path = UnsafeMutablePointer<Int8>(mutating: (source).utf8String)
       let outputpath = UnsafeMutablePointer<Int8>(mutating: (outputURL.path as NSString).utf8String)
-      RNIOVideo.ffmpeg_trim(path, outputP: outputpath, startTime: startTime, endTime: endTime)
+      var ret:Int
+      ret = Int(RNIOVideo.ffmpeg_trim(path, outputP: outputpath, startTime: startTime, endTime: endTime))
+      print(ret)
     }
-  func randomString() -> String {
+  func randomString() -> String { 
     let letters: NSString = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
     let randomString: NSMutableString = NSMutableString(capacity: 20)
     let s:String = "RNTrimmer-Temp-Video"
