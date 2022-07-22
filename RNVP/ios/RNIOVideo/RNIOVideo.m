@@ -36,7 +36,7 @@
     return packt_file;
 }
 
-+ (size_t) read_packt_from_file:(AVPacket*)packet file:(FILE*)file
++ (void) read_packt_from_file:(AVPacket*)packet file:(FILE*)file
 {
     size_t ret = 0;
     
@@ -51,10 +51,10 @@
         packet->buf->data = malloc(packet->buf->size);
         ret = fread(packet->buf->data, packet->buf->size, 1, file);
     }
-    return ret;
+    return;
 }
 
-+ (size_t) write_packt_to_file:(AVPacket*) packet file:(FILE*) file
++ (void) write_packt_to_file:(AVPacket*) packet file:(FILE*) file
 {
     size_t ret = 0;
     ret = fwrite(packet, sizeof(AVPacket), 1, file);
@@ -63,7 +63,7 @@
         fwrite(packet->buf->data, packet->buf->size, 1, file);
     }
     fflush(file);
-    return ret;
+  return;
 }
 
 + (int) ffmpeg_trim:(const char *)input output:(const char *)output startTime:(CGFloat)startT endTime:(CGFloat)endT
@@ -138,8 +138,8 @@
         goto end;
     }
 
-    FILE* file_write = open_file_write(output);
-    FILE* file_read = open_file_write(input);
+  FILE* file_write = [RNIOVideo open_file_write:out_filename];
+  FILE* file_read = [RNIOVideo open_file_write:in_filename];
   
   size_t filesize;
   size_t packetsize;
@@ -150,34 +150,35 @@
         if (ret < 0)
             break;
 
-      filesize = write_packt_to_file(&pkt, file_write);
-      packetsize = read_packt_from_file(&read_packet, file_read);
+      filesize = [RNIOVideo write_packt_to_file:&pkt file:file_write];
+      packetsize = [RNIOVideo read_packt_from_file:&read_packet file:file_read];
         
         in_stream  = ifmt_ctx->streams[read_packet.stream_index];
         out_stream = ofmt_ctx->streams[read_packet.stream_index];
 
-        log_packet(ifmt_ctx, &read_packet, "in");
 
         /* copy packet */
+
         read_packet.pts = av_rescale_q_rnd(read_packet.pts, in_stream->time_base, out_stream->time_base, AV_ROUND_NEAR_INF|AV_ROUND_PASS_MINMAX);
         read_packet.dts = av_rescale_q_rnd(read_packet.dts, in_stream->time_base, out_stream->time_base, AV_ROUND_NEAR_INF|AV_ROUND_PASS_MINMAX);
         read_packet.duration = (int)av_rescale_q(read_packet.duration, in_stream->time_base, out_stream->time_base);
         read_packet.pos = -1;
-        log_packet(ofmt_ctx, &read_packet, "out");
         
-
-        ret = av_interleaved_write_frame(ofmt_ctx, &read_packet);
-        if (ret < 0) {
-            fprintf(stderr, "Error muxing packet\n");
-            break;
-        }
+        if(read_packet.duration >=startT && read_packet.duration < endT)
+          ret = av_interleaved_write_frame(ofmt_ctx, &read_packet);
+          if (ret < 0) {
+              fprintf(stderr, "Error muxing packet\n");
+              break;
+          }
+        else
+          break;
         av_free_packet(&read_packet);
         av_free_packet(&pkt);
     }
     
     av_write_trailer(ofmt_ctx);
-    close_file(file_write);
-    close_file(file_read);
+  [RNIOVideo close_file:file_write];
+  [RNIOVideo close_file:file_read];;
 end:
 
     avformat_close_input(&ifmt_ctx);

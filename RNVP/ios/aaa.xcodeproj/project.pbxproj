@@ -15,14 +15,6 @@
 		1837501228890BC60035FFC2 /* RNVideoProcessingBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 18374FF028890BC60035FFC2 /* RNVideoProcessingBridge.m */; };
 		1837501828890BC60035FFC2 /* RNVideoPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18374FFA28890BC60035FFC2 /* RNVideoPlayer.swift */; };
 		1837502528890BFB0035FFC2 /* FFmpeg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1837502428890BFB0035FFC2 /* FFmpeg.framework */; };
-		1837502828890C390035FFC2 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1837502728890C390035FFC2 /* AudioToolbox.framework */; };
-		1837502A28890C410035FFC2 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1837502928890C410035FFC2 /* AVFoundation.framework */; };
-		1837502C28890C4D0035FFC2 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1837502B28890C4D0035FFC2 /* CoreMedia.framework */; };
-		1837502E28890C540035FFC2 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1837502D28890C540035FFC2 /* CoreVideo.framework */; };
-		1837503128890C5E0035FFC2 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1837502F28890C5E0035FFC2 /* MobileCoreServices.framework */; };
-		1837503228890C5E0035FFC2 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1837503028890C5E0035FFC2 /* CoreServices.framework */; };
-		1837503428890C7F0035FFC2 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1837503328890C7F0035FFC2 /* OpenGLES.framework */; };
-		1837503628890C850035FFC2 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1837503528890C850035FFC2 /* QuartzCore.framework */; };
 		1837503A28890CBF0035FFC2 /* libbz2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 1837503728890C9F0035FFC2 /* libbz2.tbd */; };
 		1837503B28890CC70035FFC2 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 1837503928890CAD0035FFC2 /* libz.tbd */; };
 		1837503C28890CCF0035FFC2 /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 1837503828890CA70035FFC2 /* libiconv.tbd */; };
@@ -96,19 +88,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1837503628890C850035FFC2 /* QuartzCore.framework in Frameworks */,
 				1837503B28890CC70035FFC2 /* libz.tbd in Frameworks */,
-				1837502A28890C410035FFC2 /* AVFoundation.framework in Frameworks */,
 				1837503A28890CBF0035FFC2 /* libbz2.tbd in Frameworks */,
-				1837503128890C5E0035FFC2 /* MobileCoreServices.framework in Frameworks */,
 				88EC3D365D432973752D1A87 /* libPods-aaa.a in Frameworks */,
 				1837502528890BFB0035FFC2 /* FFmpeg.framework in Frameworks */,
-				1837502828890C390035FFC2 /* AudioToolbox.framework in Frameworks */,
-				1837502C28890C4D0035FFC2 /* CoreMedia.framework in Frameworks */,
 				1837503C28890CCF0035FFC2 /* libiconv.tbd in Frameworks */,
-				1837502E28890C540035FFC2 /* CoreVideo.framework in Frameworks */,
-				1837503228890C5E0035FFC2 /* CoreServices.framework in Frameworks */,
-				1837503428890C7F0035FFC2 /* OpenGLES.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
