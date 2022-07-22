@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { View, ViewPropTypes, requireNativeComponent, NativeModules, UIManager } from 'react-native';
 import { getActualSource } from '../utils';
 const PLAYER_COMPONENT_NAME = 'RNVideoProcessing';
-const { RNTrim } = NativeModules;
 
 //const ProcessingUI = UIManager.getViewManagerConfig('RNVideoProcessing');
 
@@ -93,28 +92,8 @@ export class VideoPlayer extends Component {
   }
 
   trim(options = {}) {
-    const availableQualities = Object.values(VideoPlayer.Constants.quality);
-    if (!options.hasOwnProperty('startTime')) {
-      // eslint-disable-next-line no-console
-      console.warn('Start time is not specified');
-    }
-    if (!options.hasOwnProperty('endTime')) {
-      // eslint-disable-next-line no-console
-      console.warn('End time is not specified');
-    }
-    if (options.hasOwnProperty('quality') && !availableQualities.includes(options.quality)) {
-      // eslint-disable-next-line no-console
-      console.warn('Quality is wrong, Please use VideoPlayer.Constants.quality');
-    }
-    const actualSource = getActualSource(this.props.source);
-    return new Promise((resolve, reject) => {
-      RNTrim(actualSource, options, (err, output) => {
-        if (err) {
-          return reject(err);
-        }
-        return resolve(output);
-      });
-    });
+    RNVideoPlayer.trim(this.props.source)
+    return;
   }
 
   // compress(_options = {}) {

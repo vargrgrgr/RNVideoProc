@@ -446,11 +446,10 @@ class RNVideoPlayer: RCTView {
       }
       return useQuality
     }
-    func trim( source: NSString, startTime: CGFloat, endTime: CGFloat, callback: @escaping RCTResponseSenderBlock){
+    func trim(source: NSString){
       let manager = FileManager.default
       guard let documentDirectory = try? manager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
         else {
-          callback(["Error creating FileManager", NSNull()])
           return
       }
       var outputURL = documentDirectory.appendingPathComponent("output")
@@ -459,19 +458,20 @@ class RNVideoPlayer: RCTView {
         let name = randomString()
         outputURL = outputURL.appendingPathComponent("\(name).mp4")
       } catch {
-        callback([error.localizedDescription, NSNull()])
         print(error)
       }
+      print(source)
+      print(outputURL.path)
       let path = UnsafeMutablePointer<Int8>(mutating: (source).utf8String)
       let outputpath = UnsafeMutablePointer<Int8>(mutating: (outputURL.path as NSString).utf8String)
-      var ret:Int
-      ret = Int(RNIOVideo.ffmpeg_trim(path, outputP: outputpath, startTime: startTime, endTime: endTime))
+      var ret:Int32
+      ret = RNIOVideo.ffmpeg_trim(path, outputP: outputpath, startTime: CGFloat(5), endTime: CGFloat(10))
       print(ret)
     }
-  func randomString() -> String { 
+  func randomString() -> String {
     let letters: NSString = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
     let randomString: NSMutableString = NSMutableString(capacity: 20)
-    let s:String = "RNTrimmer-Temp-Video"
+    let s:String = "TempVideo"
     for _ in 0...19 {
       randomString.appendFormat("%C", letters.character(at: Int(arc4random_uniform(UInt32(letters.length)))))
     }

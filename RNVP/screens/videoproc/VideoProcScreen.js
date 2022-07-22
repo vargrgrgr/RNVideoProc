@@ -56,14 +56,7 @@ const initialTrimUnitSize = 5000;
   }
   //----------------
   trimVideo = () => {
-      const options = {
-          source: this.videoPlayerRef.videoSource,
-          startTime: this.state.trimmerLeftHandlePosition/1000,
-          endTime: this.state.trimmerRightHandlePosition/1000,
-      };
-      this.videoPlayerRef.trim(options)
-          .then((newSource) => console.log(newSource))
-          .catch(console.warn);
+      this.videoPlayerRef.trim()
   }
   //----------------
   getPreviewImageForSecond = (second) => {
