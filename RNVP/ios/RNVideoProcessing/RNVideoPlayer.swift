@@ -33,7 +33,7 @@ class RNVideoPlayer: RCTView {
   @objc var onChange: RCTBubblingEventBlock?
   
   let LOG_KEY: String = "VIDEO_PROCESSING"
-  
+
   @objc func setSource(_ val: NSString) {
     source = val
   }
@@ -332,7 +332,9 @@ class RNVideoPlayer: RCTView {
         }
         )
     }
-    
+    func forceRedraw(){
+      self.player.currentItem?.videoComposition = self.player.currentItem?.videoComposition?.mutableCopy() as? AVVideoComposition
+    }
     func replayMovie() {
         if player != nil {
             self.player.seek(to: convertToCMTime(val: self._playerStartTime))
@@ -343,6 +345,7 @@ class RNVideoPlayer: RCTView {
     func onVideoCurrentTimeChange(currentTime: CGFloat) {
         if self.onChange != nil {
             let event = ["currentTime": currentTime]
+          self.forceRedraw()
             self.onChange!(event)
         }
     }

@@ -169,8 +169,8 @@
 		18857134288D095A00C179AC /* RNVideoTrimmer */ = {
 			isa = PBXGroup;
 			children = (
-				18857139288D097300C179AC /* AVUtilities.swift */,
 				18857135288D097300C179AC /* RNVideoTrimmer.swift */,
+				18857139288D097300C179AC /* AVUtilities.swift */,
 				18857137288D097300C179AC /* RNVideoTrimmerBridge.m */,
 				18857138288D097300C179AC /* SDAVAssetExportSession.h */,
 				18857136288D097300C179AC /* SDAVAssetExportSession.m */,

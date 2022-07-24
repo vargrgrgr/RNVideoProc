@@ -7,7 +7,6 @@ const PLAYER_COMPONENT_NAME = 'RNVideoProcessing';
 const { RNVideoTrimmer } = NativeModules;
 
 const ProcessingUI = UIManager.getViewManagerConfig('RNVideoProcessing');
-
 export class VideoPlayer extends Component {
   static propTypes = {
     source: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
@@ -130,14 +129,10 @@ export class VideoPlayer extends Component {
       console.log("end")
     });
   }
-
-  ff_trim(source, startTime, endTime) {
+  ff_trim(source) {
     console.log(source)
-    console.log("startTime")
-    console.log(startTime)
-    console.log("endTime")
-    console.log(startTime+5000)
-    RNVideoPlayer.ff_trim(source, startTime, startTime+5000)
+
+    RNVideoTrimmer.ff_trim(source)
     return;
   }
 

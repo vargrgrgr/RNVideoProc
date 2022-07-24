@@ -385,7 +385,7 @@ export default class Trimmer extends React.Component {
           const newBoundedTrackScaleValue = Math.max(Math.min(newTrackScaleValue, maximumZoomLevel), 1)
   
           //this.setState({trackScale: newBoundedTrackScaleValue})
-          this.setState({trackScale: 0.8})
+          this.setState({trackScale: 1})
         } else {
           const stepValue = (gestureState.dy - this.lastScaleDy);
           this.lastScaleDy = gestureState.dy
@@ -547,8 +547,6 @@ export default class Trimmer extends React.Component {
                     styles.scrubberContainer,
                     { left: actualScrubPosition },
                   ]} 
-                  hitSlop={{top: 0, bottom: 0, right: 0, left: 0}}
-                  {...this.scrubHandlePanResponder.panHandlers}
                 >
 
                   <View style={[styles.scrubberTail, { backgroundColor: scrubberColor }]} />
@@ -600,8 +598,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: TRACK_BORDER_COLOR,
     height: 50,
-    left: -10,
-    marginHorizontal: HANDLE_WIDTHS + TRACK_PADDING_OFFSET+11,
+    marginHorizontal: HANDLE_WIDTHS + TRACK_PADDING_OFFSET,
   },
   trimmer: {
     position: 'absolute',
@@ -617,6 +614,7 @@ const styles = StyleSheet.create({
     height: 53,
     backgroundColor: TINT_COLOR,
     top: 37,
+    right: 10,
   },
   leftHandle: {
     borderTopLeftRadius: 10,
@@ -625,6 +623,7 @@ const styles = StyleSheet.create({
   rightHandle: {
     borderTopRightRadius: 10,
     borderBottomRightRadius: 10,
+    right: 120,
   },
   selection: {
     opacity: 0.2,

@@ -66,7 +66,7 @@
   return;
 }
 
-+ (int) ffmpeg_trim:(const char *)input output:(const char *)output startTime:(CGFloat)startT endTime:(CGFloat)endT
++ (int) ffmpeg_trim:(const char *)input output:(const char *)output
 {
     AVOutputFormat *ofmt = NULL;
     AVFormatContext *ifmt_ctx = NULL, *ofmt_ctx = NULL;
@@ -75,10 +75,10 @@
     const char *in_filename, *out_filename;
     int ret, i;
 
-  RCTLog(@"trim init");
-  in_filename  = input;
-  out_filename = output;
-  RCTLog(@"out_filename");
+
+    in_filename  = input;
+    out_filename = output;
+
 
     if ((ret = avformat_open_input(&ifmt_ctx, in_filename, 0, 0)) < 0) {
         fprintf(stderr, "Could not open input file '%s'", in_filename);
@@ -138,18 +138,18 @@
         goto end;
     }
 
-  FILE* file_write = [RNIOVideo open_file_write:out_filename];
-  FILE* file_read = [RNIOVideo open_file_write:in_filename];
-  
-  size_t filesize;
-  size_t packetsize;
-  RCTLog(@"decode-encode");
-    while (1) {
-        AVStream *in_stream, *out_stream;
+    FILE* file_write = [RNIOVideo open_file_write:out_filename];
+    FILE* file_read = [RNIOVideo open_file_write:in_filename];
+    
+    size_t filesize;
+    size_t packetsize;
 
-        ret = av_read_frame(ifmt_ctx, &pkt);
-        if (ret < 0)
-            break;
+    while (1) {
+      AVStream *in_stream, *out_stream;
+
+      ret = av_read_frame(ifmt_ctx, &pkt);
+      if (ret < 0)
+        break;
 
       filesize = [RNIOVideo write_packt_to_file:&pkt file:file_write];
       packetsize = [RNIOVideo read_packt_from_file:&read_packet file:file_read];
@@ -164,24 +164,19 @@
         read_packet.dts = av_rescale_q_rnd(read_packet.dts, in_stream->time_base, out_stream->time_base, AV_ROUND_NEAR_INF|AV_ROUND_PASS_MINMAX);
         read_packet.duration = (int)av_rescale_q(read_packet.duration, in_stream->time_base, out_stream->time_base);
         read_packet.pos = -1;
-        
-     // if(read_packet.duration >=startT && read_packet.duration < endT){
         ret = av_interleaved_write_frame(ofmt_ctx, &read_packet);
           if (ret < 0) {
               fprintf(stderr, "Error muxing packet\n");
               break;
           }
-     // }
-     // else{
-          break;
-//}
+
         av_free_packet(&read_packet);
         av_free_packet(&pkt);
     }
     
     av_write_trailer(ofmt_ctx);
-  [RNIOVideo close_file:file_write];
-  [RNIOVideo close_file:file_read];;
+   [RNIOVideo close_file:file_write];
+   [RNIOVideo close_file:file_read];;
 end:
 
     avformat_close_input(&ifmt_ctx);

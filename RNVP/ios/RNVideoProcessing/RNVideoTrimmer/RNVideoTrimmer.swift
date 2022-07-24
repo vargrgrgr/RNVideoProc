@@ -355,7 +355,8 @@ class RNVideoTrimmer: NSObject {
     _ = try? manager.removeItem(at: outputURL)
     _ = try? manager.removeItem(at: finalURL)
 
-    let useQuality = getQualityForAsset(quality: quality, asset: firstAsset)
+    //let useQuality = getQualityForAsset(quality: quality, asset: firstAsset)
+    let useQuality = getQualityForAsset(quality: AVAssetExportPreset1280x720, asset: firstAsset)
 
 //    print("RNVideoTrimmer passed quality: \(quality). useQuality: \(useQuality)")
 
@@ -386,7 +387,7 @@ class RNVideoTrimmer: NSObject {
       }
       exportSession.outputURL = NSURL.fileURL(withPath: finalURL.path)
       exportSession.outputFileType = .mp4
-      exportSession.shouldOptimizeForNetworkUse = true
+      exportSession.shouldOptimizeForNetworkUse = false
       let startTime = CMTime(seconds: Double(0), preferredTimescale: 1000)
       let endTime = CMTime(seconds: mixComposition.duration.seconds, preferredTimescale: 1000)
       let timeRange = CMTimeRange(start: startTime, end: endTime)
@@ -398,11 +399,11 @@ class RNVideoTrimmer: NSObject {
         case .completed:
           callback( [NSNull(), finalURL.absoluteString] )
 
-        case .failed:
-          callback( ["Failed: \(exportSession.error)", NSNull()] )
+        //case .failed:
+         // callback( ["Failed: \(exportSession.error)", NSNull()] )
 
-        case .cancelled:
-          callback( ["Cancelled: \(exportSession.error)", NSNull()] )
+        //case .cancelled:
+         // callback( ["Cancelled: \(exportSession.error)", NSNull()] )
 
         default: break
         }
@@ -629,11 +630,11 @@ class RNVideoTrimmer: NSObject {
         if #available(iOS 9.0, *) {
           useQuality = AVAssetExportPreset3840x2160
         } else {
-          useQuality = AVAssetExportPresetPassthrough
+          useQuality = AVAssetExportPreset1280x720
         }
 
       default:
-        useQuality = AVAssetExportPresetPassthrough
+        useQuality = AVAssetExportPreset1280x720
     }
 
     let compatiblePresets = AVAssetExportSession.exportPresets(compatibleWith: asset)
