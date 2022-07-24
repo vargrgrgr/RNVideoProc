@@ -14,11 +14,17 @@
 		182F40932889C9BD0090BE52 /* RNIOVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = 182F40912889C9BD0090BE52 /* RNIOVideo.m */; };
 		1837501228890BC60035FFC2 /* RNVideoProcessingBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 18374FF028890BC60035FFC2 /* RNVideoProcessingBridge.m */; };
 		1837501828890BC60035FFC2 /* RNVideoPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18374FFA28890BC60035FFC2 /* RNVideoPlayer.swift */; };
-		1837502528890BFB0035FFC2 /* FFmpeg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1837502428890BFB0035FFC2 /* FFmpeg.framework */; };
 		1837503A28890CBF0035FFC2 /* libbz2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 1837503728890C9F0035FFC2 /* libbz2.tbd */; };
 		1837503B28890CC70035FFC2 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 1837503928890CAD0035FFC2 /* libz.tbd */; };
 		1837503C28890CCF0035FFC2 /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 1837503828890CA70035FFC2 /* libiconv.tbd */; };
+		18857129288D058400C179AC /* VideoProcessingGPUFilters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18857126288D058400C179AC /* VideoProcessingGPUFilters.swift */; };
+		1885713A288D097300C179AC /* RNVideoTrimmer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18857135288D097300C179AC /* RNVideoTrimmer.swift */; };
+		1885713B288D097300C179AC /* SDAVAssetExportSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 18857136288D097300C179AC /* SDAVAssetExportSession.m */; };
+		1885713C288D097300C179AC /* RNVideoTrimmerBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 18857137288D097300C179AC /* RNVideoTrimmerBridge.m */; };
+		1885713D288D097300C179AC /* AVUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18857139288D097300C179AC /* AVUtilities.swift */; };
 		188670D228891C57007B2DD4 /* RNVideoProcessingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1837503E2889153E0035FFC2 /* RNVideoProcessingManager.swift */; };
+		18F0316E288A362500B842E5 /* FFmpeg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18F0316C288A362500B842E5 /* FFmpeg.framework */; };
+		18F0316F288A362500B842E5 /* FFmpeg.framework.zip in Resources */ = {isa = PBXBuildFile; fileRef = 18F0316D288A362500B842E5 /* FFmpeg.framework.zip */; };
 		600EA72E4ADAEFCAED921919 /* libPods-aaa-aaaTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F8E870FF966786CA14C6D7F8 /* libPods-aaa-aaaTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		88EC3D365D432973752D1A87 /* libPods-aaa.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B69E8E41C83692ED3B8F5C6 /* libPods-aaa.a */; };
@@ -53,7 +59,6 @@
 		18374FFA28890BC60035FFC2 /* RNVideoPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RNVideoPlayer.swift; sourceTree = "<group>"; };
 		18374FFB28890BC60035FFC2 /* RCTSwiftBridgeModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTSwiftBridgeModule.h; sourceTree = "<group>"; };
 		18374FFC28890BC60035FFC2 /* RNVideoProcessing-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RNVideoProcessing-Bridging-Header.h"; sourceTree = "<group>"; };
-		1837502428890BFB0035FFC2 /* FFmpeg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FFmpeg.framework; sourceTree = "<group>"; };
 		1837502728890C390035FFC2 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		1837502928890C410035FFC2 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		1837502B28890C4D0035FFC2 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
@@ -66,6 +71,14 @@
 		1837503828890CA70035FFC2 /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
 		1837503928890CAD0035FFC2 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		1837503E2889153E0035FFC2 /* RNVideoProcessingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNVideoProcessingManager.swift; sourceTree = "<group>"; };
+		18857126288D058400C179AC /* VideoProcessingGPUFilters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoProcessingGPUFilters.swift; sourceTree = "<group>"; };
+		18857135288D097300C179AC /* RNVideoTrimmer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RNVideoTrimmer.swift; path = RNVideoTrimmer/RNVideoTrimmer.swift; sourceTree = "<group>"; };
+		18857136288D097300C179AC /* SDAVAssetExportSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SDAVAssetExportSession.m; path = RNVideoTrimmer/SDAVAssetExportSession.m; sourceTree = "<group>"; };
+		18857137288D097300C179AC /* RNVideoTrimmerBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RNVideoTrimmerBridge.m; path = RNVideoTrimmer/RNVideoTrimmerBridge.m; sourceTree = "<group>"; };
+		18857138288D097300C179AC /* SDAVAssetExportSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDAVAssetExportSession.h; path = RNVideoTrimmer/SDAVAssetExportSession.h; sourceTree = "<group>"; };
+		18857139288D097300C179AC /* AVUtilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AVUtilities.swift; path = RNVideoTrimmer/AVUtilities.swift; sourceTree = "<group>"; };
+		18F0316C288A362500B842E5 /* FFmpeg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FFmpeg.framework; sourceTree = "<group>"; };
+		18F0316D288A362500B842E5 /* FFmpeg.framework.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = FFmpeg.framework.zip; sourceTree = "<group>"; };
 		44B0CD1DB7D127FD3BD3DB96 /* Pods-aaa-aaaTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aaa-aaaTests.debug.xcconfig"; path = "Target Support Files/Pods-aaa-aaaTests/Pods-aaa-aaaTests.debug.xcconfig"; sourceTree = "<group>"; };
 		612389C982EFDE714054DEAF /* Pods-aaa.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aaa.release.xcconfig"; path = "Target Support Files/Pods-aaa/Pods-aaa.release.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = aaa/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -88,10 +101,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				18F0316E288A362500B842E5 /* FFmpeg.framework in Frameworks */,
 				1837503B28890CC70035FFC2 /* libz.tbd in Frameworks */,
 				1837503A28890CBF0035FFC2 /* libbz2.tbd in Frameworks */,
 				88EC3D365D432973752D1A87 /* libPods-aaa.a in Frameworks */,
-				1837502528890BFB0035FFC2 /* FFmpeg.framework in Frameworks */,
 				1837503C28890CCF0035FFC2 /* libiconv.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -141,6 +154,8 @@
 		18374FDD28890BC60035FFC2 /* RNVideoProcessing */ = {
 			isa = PBXGroup;
 			children = (
+				18857134288D095A00C179AC /* RNVideoTrimmer */,
+				18857126288D058400C179AC /* VideoProcessingGPUFilters.swift */,
 				1837503E2889153E0035FFC2 /* RNVideoProcessingManager.swift */,
 				18374FF028890BC60035FFC2 /* RNVideoProcessingBridge.m */,
 				18374FF928890BC60035FFC2 /* RNVideoProcessing.h */,
@@ -151,12 +166,26 @@
 			path = RNVideoProcessing;
 			sourceTree = "<group>";
 		};
-		1837502328890BFB0035FFC2 /* FFmpegDylibFramework */ = {
+		18857134288D095A00C179AC /* RNVideoTrimmer */ = {
 			isa = PBXGroup;
 			children = (
-				1837502428890BFB0035FFC2 /* FFmpeg.framework */,
+				18857139288D097300C179AC /* AVUtilities.swift */,
+				18857135288D097300C179AC /* RNVideoTrimmer.swift */,
+				18857137288D097300C179AC /* RNVideoTrimmerBridge.m */,
+				18857138288D097300C179AC /* SDAVAssetExportSession.h */,
+				18857136288D097300C179AC /* SDAVAssetExportSession.m */,
 			);
-			path = FFmpegDylibFramework;
+			name = RNVideoTrimmer;
+			sourceTree = "<group>";
+		};
+		18F0316B288A362500B842E5 /* FFmpegDylibFramework */ = {
+			isa = PBXGroup;
+			children = (
+				18F0316C288A362500B842E5 /* FFmpeg.framework */,
+				18F0316D288A362500B842E5 /* FFmpeg.framework.zip */,
+			);
+			name = FFmpegDylibFramework;
+			path = li/FFmpegDylibFramework;
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
@@ -201,9 +230,9 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				18F0316B288A362500B842E5 /* FFmpegDylibFramework */,
 				182F408E2889AA930090BE52 /* aaa-Bridging-Header.h */,
 				182F408D2889AA610090BE52 /* RNIOVideo */,
-				1837502328890BFB0035FFC2 /* FFmpegDylibFramework */,
 				18374FDD28890BC60035FFC2 /* RNVideoProcessing */,
 				13B07FAE1A68108700A75B9A /* aaa */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -320,6 +349,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				18F0316F288A362500B842E5 /* FFmpeg.framework.zip in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 			);
@@ -489,9 +519,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				188670D228891C57007B2DD4 /* RNVideoProcessingManager.swift in Sources */,
+				1885713C288D097300C179AC /* RNVideoTrimmerBridge.m in Sources */,
+				18857129288D058400C179AC /* VideoProcessingGPUFilters.swift in Sources */,
 				182F40932889C9BD0090BE52 /* RNIOVideo.m in Sources */,
+				1885713B288D097300C179AC /* SDAVAssetExportSession.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				1837501828890BC60035FFC2 /* RNVideoPlayer.swift in Sources */,
+				1885713A288D097300C179AC /* RNVideoTrimmer.swift in Sources */,
+				1885713D288D097300C179AC /* AVUtilities.swift in Sources */,
 				1837501228890BC60035FFC2 /* RNVideoProcessingBridge.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
@@ -568,10 +603,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 2NW49L3G6X;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/FFmpegDylibFramework",
+					"$(PROJECT_DIR)/li/FFmpegDylibFramework",
 				);
 				INFOPLIST_FILE = aaa/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -583,7 +620,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.aaalys;
 				PRODUCT_NAME = aaa;
 				SWIFT_OBJC_BRIDGING_HEADER = "aaa-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -599,9 +636,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 2NW49L3G6X;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/FFmpegDylibFramework",
+					"$(PROJECT_DIR)/li/FFmpegDylibFramework",
 				);
 				INFOPLIST_FILE = aaa/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -613,7 +652,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.aaalys;
 				PRODUCT_NAME = aaa;
 				SWIFT_OBJC_BRIDGING_HEADER = "aaa-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;

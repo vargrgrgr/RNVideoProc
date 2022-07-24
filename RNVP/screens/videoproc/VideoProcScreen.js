@@ -10,7 +10,7 @@ const minimumTrimDuration = 1000;
 const initialTotalDuration = 10000
 const initialLeftHandlePosition = 0;
 const initialRightHandlePosition = 5000;
-const scrubInterval = 50;
+const scrubInterval = 30;
 const initialTrimUnitSize = 5000;
 
 
@@ -56,7 +56,18 @@ const initialTrimUnitSize = 5000;
   }
   //----------------
   trimVideo = () => {
-      this.videoPlayerRef.trim()
+    const options = {
+      startTime: this.state.trimmerLeftHandlePosition/1000,
+      endTime: (this.state.trimmerLeftHandlePosition)/1000+5,
+      quality: VideoPlayer.Constants.quality.QUALITY_1280x720, // iOS only
+      saveToCameraRoll: true, // default is false // iOS only
+      saveWithCurrentDate: false, // default is false // iOS only
+    };
+    console.log("trim");
+    this.videoPlayerRef.trim(options)
+      .then((newSource) => console.log(newSource))
+      .catch(console.warn);
+  //this.videoPlayerRef.trim(this.state.videoSource, this.state.trimmerLeftHandlePosition, this.state.trimmerRighttHandlePosition)
   }
   //----------------
   getPreviewImageForSecond = (second) => {
@@ -88,23 +99,29 @@ const initialTrimUnitSize = 5000;
 
   //혹시 제스쳐핸들러가 핸들 위치를 잘못 설정했을 경우 fix
   fixTrimHandle = (leftposition, rightposition) => {
-    leftval = Math.abs(leftposition-this.state.trimmerLeftHandlePosition);
-    rightval = Math.abs(rightposition-this.state.trimmerRightHandlePosition);
-    if(leftval>=rightval){
-      this.setState({ trimmerLeftHandlePosition: leftposition });
-      if(leftposition+this.state.TrimUnitSize<=this.state.videoLength){
-        this.setState({ trimmerRightHandlePosition: leftposition+this.state.TrimUnitSize });
-      }else{
-                  this.setState({ trimmerLeftHandlePosition: (leftposition+this.state.TrimUnitSize-this.state.videoLength) });
-                  this.setState({ trimmerRightHandlePosition: this.state.trimmerLeftHandlePosition+this.state.TrimUnitSize });
+    // leftval = Math.abs(leftposition-this.state.trimmerLeftHandlePosition);
+    // rightval = Math.abs(rightposition-this.state.trimmerRightHandlePosition);
+    // if(leftval>=rightval){
+    //   this.setState({ trimmerLeftHandlePosition: leftposition });
+    //   if(leftposition+this.state.TrimUnitSize<=this.state.videoLength){
+    //     this.setState({ trimmerRightHandlePosition: leftposition+this.state.TrimUnitSize });
+    //   }else{
+    //               this.setState({ trimmerLeftHandlePosition: (leftposition+this.state.TrimUnitSize-this.state.videoLength) });
+    //               this.setState({ trimmerRightHandlePosition: this.state.trimmerLeftHandlePosition+this.state.TrimUnitSize });
+    //   }
+    // }else{
+      if(rightposition<5000){
+        this.setState({ trimmerRightHandlePosition: 5000 });
+        this.setState({ trimmerLeftHandlePosition: 0});
       }
-    }else{
-      this.setState({ trimmerRightHandlePosition: rightposition });
-      this.setState({ trimmerLeftHandlePosition: rightposition-this.state.TrimUnitSize });
-      if(rightposition-this.state.TrimUnitSize<0){
-        this.setState({ trimmerLeftHandlePosition: 0 });
+      else{
+        this.setState({ trimmerRightHandlePosition: rightposition });
+        this.setState({ trimmerLeftHandlePosition: rightposition-this.state.TrimUnitSize });
+        if(rightposition-this.state.TrimUnitSize<0){
+          this.setState({ trimmerLeftHandlePosition: 0 });
+        }
       }
-    }
+    // }
     this.setState({ scrubberPosition: this.state.trimmerLeftHandlePosition });
     this.setState({startT: this.state.trimmerLeftHandlePosition});
   } 
@@ -154,6 +171,11 @@ const initialTrimUnitSize = 5000;
             />
           </View>
           <View style={styles.buttonsview}>
+            <View style={styles.button}>
+            {
+              <Button title="Filter" color="#f638dc" />
+            }
+            </View>
             <View style={styles.button}>
             {
               playing? 
@@ -218,7 +240,7 @@ const styles = StyleSheet.create({
       flex:0.1
     },
     button:{
-      width:50,
+      width:65,
       height:40,
       opacity: 50,
       borderRadius: 15,

@@ -9,6 +9,7 @@
 #import <FFmpeg/ffmpeg.h>
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
+#import <React/RCTLog.h>
 
 @interface RNIOVideo : NSObject{}
 + (FILE*) open_file_write:(const char*)file;

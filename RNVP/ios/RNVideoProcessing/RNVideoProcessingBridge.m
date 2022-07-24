@@ -8,7 +8,7 @@
 #import "React/RCTBridgeModule.h"
 #import "React/RCTViewManager.h"
 #import "RCTSwiftBridgeModule.h"
-
+#import <React/RCTLog.h>
 @interface RCT_EXTERN_SWIFT_MODULE(RNVideoProcessingManager, RCTViewManager)
 
 RCT_EXPORT_VIEW_PROPERTY(source, NSString)

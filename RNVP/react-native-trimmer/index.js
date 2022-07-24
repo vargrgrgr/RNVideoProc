@@ -65,6 +65,7 @@ export default class Trimmer extends React.Component {
       trimmingLeftHandleValue: 0,
       trimmingRightHandleValue: 0,
       internalScrubbingPosition: 0,
+      panResponderEnabled: true,
     }
   }
   
@@ -78,6 +79,7 @@ export default class Trimmer extends React.Component {
     this.leftHandlePanResponder = this.createLeftHandlePanResponder()
     this.rightHandlePanResponder = this.createRightHandlePanResponder()
     this.scrubHandlePanResponder = this.createScrubHandlePanResponder()
+    this.TrimmerMovePanResponder = this.createTrimmerMovePanResponder()
   }
 
 
@@ -127,6 +129,92 @@ export default class Trimmer extends React.Component {
     onShouldBlockNativeResponder: (evt, gestureState) => true
   })
 
+  createTrimmerMovePanResponder = () => PanResponder.create({
+    onStartShouldSetPanResponder: (evt, gestureState) => true,
+    onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
+    onMoveShouldSetPanResponder: (evt, gestureState) => true,
+    onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
+    onPanResponderGrant: (evt, gestureState) => {
+      this.setState({
+        trimming: true,
+        trimmingRightHandleValue: this.props.trimmerRightHandlePosition,
+        trimmingLeftHandleValue: this.props.trimmerLeftHandlePosition,
+      })
+      this.handleRightHandlePressIn()
+    },
+
+
+
+    onPanResponderMove: (evt, gestureState) => {
+      const { trackScale } = this.state;
+      const { 
+        trimmerRightHandlePosition,
+        trimmerLeftHandlePosition,
+        totalDuration,
+        minimumTrimDuration = MINIMUM_TRIM_DURATION,
+        maxTrimDuration = MAXIMUM_TRIM_DURATION,
+        
+      } = this.props;
+      const trackWidth = screenWidth * trackScale
+      const calculatedTrimmerRightHandlePosition = (trimmerRightHandlePosition / totalDuration) * trackWidth;
+
+      const newTrimmerRightHandlePosition = ((calculatedTrimmerRightHandlePosition + gestureState.dx) / trackWidth ) * totalDuration
+
+      if (newTrimmerRightHandlePosition<minimumTrimDuration){
+        this.setState({
+          trimmingRightHandleValue: minimumTrimDuration,
+          trimmingLeftHandleValue: 0,
+          panResponderEnabled: false,
+        })
+      }
+      if (this.state.panResponderEnabled==true){
+        const lowerBound = minimumTrimDuration
+        const upperBound = totalDuration
+        const trimmersize = trimmerRightHandlePosition - trimmerLeftHandlePosition
+        const newBoundedTrimmerRightHandlePosition = this.clamp({
+          value: newTrimmerRightHandlePosition,
+          min: lowerBound,
+          max: upperBound
+        })
+        const newTrimmerLeftHandlePosition = newBoundedTrimmerRightHandlePosition -5000
+
+        const newBoundedTrimmerLeftHandlePosition = this.clamp({
+          value: newTrimmerLeftHandlePosition,
+          min: 0,
+          max: upperBound-5000,
+        })
+        
+        this.setState({
+          trimmingRightHandleValue: newBoundedTrimmerRightHandlePosition,
+          trimmingLeftHandleValue: newBoundedTrimmerLeftHandlePosition,
+        })
+      }
+      
+
+      
+    },
+
+
+
+    onPanResponderRelease: (evt, gestureState) => {
+      console.log(this.state.trimmingLeftHandleValue)
+      console.log(this.state.trimmingRightHandleValue)
+      if(this.state.trimmingRightHandleValue<5000){
+        console.log('this.state.trimmingRightHandleValue')
+        this.setState({trimmerRightHandleValue: 5000})
+        console.log(this.state.trimmingRightHandleValue)
+      }
+      console.log(this.state.trimmingRightHandleValue)
+      this.handleHandleSizeChange()
+      console.log(this.state.trimmingRightHandleValue)
+      this.setState({ trimming: false,  panResponderEnabled: true, })
+      console.log(this.state.trimmingRightHandleValue)
+    },
+    onPanResponderTerminationRequest: (evt, gestureState) => true,
+    onShouldBlockNativeResponder: (evt, gestureState) => true
+  })
+ 
+ 
   createRightHandlePanResponder = () => PanResponder.create({
     onStartShouldSetPanResponder: (evt, gestureState) => true,
     onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
@@ -154,8 +242,8 @@ export default class Trimmer extends React.Component {
 
       const newTrimmerRightHandlePosition = ((calculatedTrimmerRightHandlePosition + gestureState.dx) / trackWidth ) * totalDuration
     
-      const lowerBound = minimumTrimDuration
-      const upperBound = totalDuration
+      const lowerBound = minimumTrimDuration-1
+      const upperBound = totalDuration-1
 
       const newBoundedTrimmerRightHandlePosition = this.clamp({
         value: newTrimmerRightHandlePosition,
@@ -220,8 +308,8 @@ export default class Trimmer extends React.Component {
       const calculatedTrimmerLeftHandlePosition = (trimmerLeftHandlePosition / totalDuration) * trackWidth;
       
       const newTrimmerLeftHandlePosition = ((calculatedTrimmerLeftHandlePosition + gestureState.dx) / trackWidth ) * totalDuration
-      const lowerBound = 0
-      const upperBound = totalDuration - minimumTrimDuration
+      const lowerBound = 1
+      const upperBound = totalDuration - minimumTrimDuration-1
 
       const newBoundedTrimmerLeftHandlePosition = this.clamp({
         value: newTrimmerLeftHandlePosition,
@@ -468,21 +556,21 @@ export default class Trimmer extends React.Component {
               )
               : null
           }
-          <View {...this.leftHandlePanResponder.panHandlers} style={[
+          <View  style={[
             styles.handle, 
             styles.leftHandle,
             { backgroundColor: tintColor, left: actualTrimmerOffset - HANDLE_WIDTHS }
           ]}>
             <Arrow.Left />
           </View>
-          <View style={[
+          <View {...this.TrimmerMovePanResponder.panHandlers} style={[
             styles.trimmer,
             { width: actualTrimmerWidth, left: actualTrimmerOffset },
             { borderColor: tintColor }
           ]}>
             <View style={[styles.selection, { backgroundColor: tintColor }]}/>
           </View>
-          <View {...this.rightHandlePanResponder.panHandlers} style={[
+          <View style={[
             styles.handle,
             styles.rightHandle,
             { backgroundColor: tintColor, left: actualTrimmerOffset + actualTrimmerWidth }
@@ -506,18 +594,19 @@ const styles = StyleSheet.create({
   },
   trackBackground: {
     overflow: 'hidden',
-    marginVertical: 89,
+    marginVertical: 39,
     backgroundColor: TRACK_BACKGROUND_COLOR,
     borderRadius: 5,
     borderWidth: 1,
     borderColor: TRACK_BORDER_COLOR,
     height: 50,
+    left: -10,
     marginHorizontal: HANDLE_WIDTHS + TRACK_PADDING_OFFSET+11,
   },
   trimmer: {
     position: 'absolute',
     left: TRACK_PADDING_OFFSET,
-    top: 87,
+    top: 37,
     borderColor: TINT_COLOR,
     borderWidth: 3,
     height: 53,
@@ -527,7 +616,7 @@ const styles = StyleSheet.create({
     width: HANDLE_WIDTHS,
     height: 53,
     backgroundColor: TINT_COLOR,
-    top: 87,
+    top: 37,
   },
   leftHandle: {
     borderTopLeftRadius: 10,
@@ -584,6 +673,6 @@ const styles = StyleSheet.create({
     width: 3,
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
-    top: 88,
+    top: 38,
   },
 });

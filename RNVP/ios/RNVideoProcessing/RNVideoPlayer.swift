@@ -1,29 +1,27 @@
 //
 //  RNVideoPlayer.swift
 //  RNVideoProcessing
-//
-//  Created by Shahen Hovhannisyan on 11/14/16.
+
+
 
 import Foundation
 import AVFoundation
+import UIKit
 
 @objc(RNVideoPlayer)
 class RNVideoPlayer: RCTView {
     
-  //let processingFilters: VideoProcessingGPUFilters = VideoProcessingGPUFilters()
+  let processingFilters: VideoProcessingGPUFilters = VideoProcessingGPUFilters()
+  
   var playerVolume: NSNumber = 0
   var player: AVPlayer! = nil
   var playerLayer: AVPlayerLayer?
+  
   var playerCurrentTimeObserver: Any! = nil
   var playerItem: AVPlayerItem! = nil
-//  var gpuMovie: GPUImageMovie! = nil
-//
-//  var phantomGpuMovie: GPUImageMovie! = nil
-//  var phantomFilterView: GPUImageView = GPUImageView()
-//
-  //let filterView: GPUImageView = GPUImageView()
+
   
-  var _playerHeight: CGFloat = UIScreen.main.bounds.height
+  var _playerHeight: CGFloat = UIScreen.main.bounds.width * 4 / 3
   var _playerWidth: CGFloat = UIScreen.main.bounds.width
   var _moviePathSource: NSString = ""
   var _playerStartTime: CGFloat = 0
@@ -31,22 +29,10 @@ class RNVideoPlayer: RCTView {
   var _replay: Bool = false
   var _rotate: Bool = false
   var isInitialized = false
-  var _resizeMode = AVLayerVideoGravity.resizeAspectFill
+  var _resizeMode = AVLayerVideoGravity.resizeAspect
   @objc var onChange: RCTBubblingEventBlock?
   
   let LOG_KEY: String = "VIDEO_PROCESSING"
-  
-  enum QUALITY_ENUM: String {
-    case QUALITY_LOW = "low"
-    case QUALITY_MEDIUM = "medium"
-    case QUALITY_HIGHEST = "highest"
-    case QUALITY_640x480 = "640x480"
-    case QUALITY_960x540 = "960x540"
-    case QUALITY_1280x720 = "1280x720"
-    case QUALITY_1920x1080 = "1920x1080"
-    case QUALITY_3840x2160 = "3840x2160"
-    case QUALITY_PASS_THROUGH = "passthrough"
-  }
   
   @objc func setSource(_ val: NSString) {
     source = val
@@ -79,7 +65,7 @@ class RNVideoPlayer: RCTView {
     volume = val
   }
   @objc func setResizeMode(_ val: NSString) {
-    //resizeMode = val
+    resizeMode = val
   }
     
     // props
@@ -111,9 +97,10 @@ class RNVideoPlayer: RCTView {
             guard let newValue = newValue as String? else {
                 return
             }
-          self._resizeMode = AVLayerVideoGravity.resizeAspectFill
+            self._resizeMode = AVLayerVideoGravity(rawValue: newValue)
             self.playerLayer?.videoGravity = self._resizeMode
             self.setNeedsLayout()
+            print("CHANGED: resizeMode \(newValue)")
         }
         get {
             return nil
@@ -141,9 +128,7 @@ class RNVideoPlayer: RCTView {
             if val != nil {
                 self._moviePathSource = val!
                 print("CHANGED source \(val)")
-//                if self.gpuMovie != nil {
-//                    self.gpuMovie.endProcessing()
-//                }
+
                 self.startPlayer()
             }
         }
@@ -268,7 +253,6 @@ class RNVideoPlayer: RCTView {
             return nil
         }
     }
-  
     
     var rotate: NSNumber? {
         set(val) {
@@ -276,19 +260,20 @@ class RNVideoPlayer: RCTView {
                 self._rotate = RCTConvert.bool(val!)
                 var rotationAngle: CGFloat = 0
                 if self._rotate {
-                    playerLayer?.frame.size.width = self._playerHeight
-                    playerLayer?.frame.size.height = self._playerWidth
-                    playerLayer?.bounds.size.width = self._playerHeight
-                    playerLayer?.bounds.size.height = self._playerWidth
+                  playerLayer?.frame.size.width  = self._playerHeight
+                  playerLayer?.frame.size.height = self._playerWidth
+                  playerLayer?.bounds.size.width = self._playerHeight
+                  playerLayer?.bounds.size.height = self._playerWidth
                     rotationAngle = CGFloat.pi / 2
                 } else {
-                    playerLayer?.frame.size.width = self._playerWidth
-                    playerLayer?.frame.size.height = self._playerHeight
-                    playerLayer?.bounds.size.width = self._playerWidth
-                    playerLayer?.bounds.size.height = self._playerHeight
+                  playerLayer?.frame.size.width = self._playerWidth
+                  playerLayer?.frame.size.height = self._playerHeight
+                  playerLayer?.bounds.size.width = self._playerWidth
+                  playerLayer?.bounds.size.height = self._playerHeight
                 }
-                playerLayer?.frame.origin = CGPoint.zero
-                self.playerLayer?.transform = CATransform3DMakeAffineTransform(CGAffineTransform(rotationAngle: rotationAngle))
+              playerLayer?.frame.origin = CGPoint.zero
+              self.playerLayer?.transform = CATransform3DMakeAffineTransform(CGAffineTransform(rotationAngle: rotationAngle))
+
                 self.setNeedsLayout()
                 self.layoutIfNeeded()
             }
@@ -318,50 +303,7 @@ class RNVideoPlayer: RCTView {
         }
     }
     
-//    func generatePreviewImages() -> Void {
-//        let hueFilter = self.processingFilters.getFilterByName(name: "hue")
-//        gpuMovie.removeAllTargets()
-//        gpuMovie.addTarget(hueFilter)
-//        hueFilter?.addTarget(self.filterView)
-//        gpuMovie.startProcessing()
-//        player.play()
-//        hueFilter?.useNextFrameForImageCapture()
-//
-//        let huePreview = hueFilter?.imageFromCurrentFramebuffer()
-//        if huePreview != nil {
-//            print("CREATED: Preview: Hue: \(toBase64(image: huePreview!))")
-//        }
-//    }
-    func getSourceURL(source: String) -> URL {
-      var sourceURL: URL
-      if source.contains("assets-library") {
-        sourceURL = NSURL(string: source) as! URL
-      } else {
-        let bundleUrl = Bundle.main.resourceURL!
-        sourceURL = URL(string: source, relativeTo: bundleUrl)!
-      }
-      return sourceURL
-    }
-    func getAssetInfo(_ source: String, callback: RCTResponseSenderBlock) {
-      let sourceURL = getSourceURL(source: source)
-      let asset = AVAsset(url: sourceURL)
-      var assetInfo: [String: Any] = [
-        "duration" : asset.duration.seconds
-      ]
-      if let track = asset.tracks(withMediaType: .video).first {
-        let naturalSize = track.naturalSize
-        let t = track.preferredTransform
-        let isPortrait = t.a == 0 && abs(t.b) == 1 && t.d == 0
-        let size = [
-          "width": isPortrait ? naturalSize.height : naturalSize.width,
-          "height": isPortrait ? naturalSize.width : naturalSize.height
-        ]
-        assetInfo["size"] = size
-        assetInfo["frameRate"] = Int(round(track.nominalFrameRate))
-        assetInfo["bitrate"] = Int(round(track.estimatedDataRate))
-      }
-      callback( [NSNull(), assetInfo] )
-    }
+
     
     func toBase64(image: UIImage) -> String {
         let imageData:NSData = image.pngData()! as NSData
@@ -404,129 +346,40 @@ class RNVideoPlayer: RCTView {
             self.onChange!(event)
         }
     }
-    func getQualityForAsset(quality: String, asset: AVAsset) -> String {
-      var useQuality: String
-
-      switch quality {
-        case QUALITY_ENUM.QUALITY_LOW.rawValue:
-          useQuality = AVAssetExportPresetLowQuality
-
-        case QUALITY_ENUM.QUALITY_MEDIUM.rawValue:
-          useQuality = AVAssetExportPresetMediumQuality
-
-        case QUALITY_ENUM.QUALITY_HIGHEST.rawValue:
-          useQuality = AVAssetExportPresetHighestQuality
-
-        case QUALITY_ENUM.QUALITY_640x480.rawValue:
-          useQuality = AVAssetExportPreset640x480
-
-        case QUALITY_ENUM.QUALITY_960x540.rawValue:
-          useQuality = AVAssetExportPreset960x540
-
-        case QUALITY_ENUM.QUALITY_1280x720.rawValue:
-          useQuality = AVAssetExportPreset1280x720
-
-        case QUALITY_ENUM.QUALITY_1920x1080.rawValue:
-          useQuality = AVAssetExportPreset1920x1080
-
-        case QUALITY_ENUM.QUALITY_3840x2160.rawValue:
-          if #available(iOS 9.0, *) {
-            useQuality = AVAssetExportPreset3840x2160
-          } else {
-            useQuality = AVAssetExportPresetPassthrough
-          }
-
-        default:
-          useQuality = AVAssetExportPresetPassthrough
-      }
-
-      let compatiblePresets = AVAssetExportSession.exportPresets(compatibleWith: asset)
-      if !compatiblePresets.contains(useQuality) {
-        useQuality = AVAssetExportPresetPassthrough
-      }
-      return useQuality
-    }
-    func trim(source: NSString){
-      let manager = FileManager.default
-      guard let documentDirectory = try? manager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-        else {
-          return
-      }
-      var outputURL = documentDirectory.appendingPathComponent("output")
-      do {
-        try manager.createDirectory(at: outputURL, withIntermediateDirectories: true, attributes: nil)
-        let name = randomString()
-        outputURL = outputURL.appendingPathComponent("\(name).mp4")
-      } catch {
-        print(error)
-      }
-      print(source)
-      print(outputURL.path)
-      let path = UnsafeMutablePointer<Int8>(mutating: (source).utf8String)
-      let outputpath = UnsafeMutablePointer<Int8>(mutating: (outputURL.path as NSString).utf8String)
-      var ret:Int32
-      ret = RNIOVideo.ffmpeg_trim(path, outputP: outputpath, startTime: CGFloat(5), endTime: CGFloat(10))
-      print(ret)
-    }
-  func randomString() -> String {
-    let letters: NSString = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-    let randomString: NSMutableString = NSMutableString(capacity: 20)
-    let s:String = "TempVideo"
-    for _ in 0...19 {
-      randomString.appendFormat("%C", letters.character(at: Int(arc4random_uniform(UInt32(letters.length)))))
-    }
-    return s.appending(randomString as String)
-  }
-  func getVideoOrientationFromAsset(asset : AVAsset) -> UIImage.Orientation {
-    let videoTrack: AVAssetTrack? = asset.tracks(withMediaType: .video)[0]
-    let size = videoTrack!.naturalSize
-
-    let txf: CGAffineTransform = videoTrack!.preferredTransform
-
-    if (size.width == txf.tx && size.height == txf.ty) {
-      return .left;
-    } else if (txf.tx == 0 && txf.ty == 0) {
-      return .right;
-    } else if (txf.tx == 0 && txf.ty == size.width) {
-      return .down;
-    } else {
-      return .up;
-    }
-  }
+    
     // start player
     func startPlayer() {
-        
-        self.backgroundColor = UIColor.darkGray
-        
-        let movieURL = NSURL(string: _moviePathSource as String)
-        
-        if self.player == nil {
-            player = AVPlayer()
-            player.volume = playerVolume.floatValue
-        }
-        playerItem = AVPlayerItem(url: movieURL as! URL)
-        player.replaceCurrentItem(with: playerItem)
-        
-        // MARK - Temporary removing playeLayer, it dublicates video if it's in landscape mode
-                 playerLayer = AVPlayerLayer(player: player)
-                 playerLayer!.videoGravity = self._resizeMode
-                 playerLayer!.masksToBounds = true
-                 //playerLayer!.removeFromSuperlayer()
-
-      print("CHANGED playerframe \(playerLayer), frameAAA \(playerLayer?.frame)")
-        self.setNeedsLayout()
-        
-        self._playerEndTime = CGFloat(CMTimeGetSeconds((player.currentItem?.asset.duration)!))
-        print("CHANGED playerEndTime \(self._playerEndTime)")
+      self.backgroundColor = UIColor.darkGray
       
-        
-        self.setPlayerWidth(UIScreen.main.bounds.width as NSNumber)
-        self.setPlayerHeight(UIScreen.main.bounds.height as NSNumber)
-        playerLayer?.bounds=self.bounds
-        self.layer.addSublayer(playerLayer!)
-        playerLayer!.frame=playerLayer!.bounds
-        print("AVLayerVideoGravity \(AVLayerVideoGravity.resizeAspectFill)")
-        self.isInitialized = true
+      let movieURL = NSURL(string: _moviePathSource as String)
+      
+      if self.player == nil {
+          player = AVPlayer()
+          player.volume = playerVolume.floatValue
+      }
+      playerItem = AVPlayerItem(url: movieURL as! URL)
+      player.replaceCurrentItem(with: playerItem)
+      
+      // MARK - Temporary removing playeLayer, it dublicates video if it's in landscape mode
+               playerLayer = AVPlayerLayer(player: player)
+               playerLayer!.videoGravity = self._resizeMode
+               playerLayer!.masksToBounds = true
+               //playerLayer!.removeFromSuperlayer()
+
+    print("CHANGED playerframe \(playerLayer), frameAAA \(playerLayer?.frame)")
+      self.setNeedsLayout()
+      
+      self._playerEndTime = CGFloat(CMTimeGetSeconds((player.currentItem?.asset.duration)!))
+      print("CHANGED playerEndTime \(self._playerEndTime)")
+    
+      
+      self.setPlayerWidth(UIScreen.main.bounds.width as NSNumber)
+      self.setPlayerHeight(UIScreen.main.bounds.height as NSNumber)
+      playerLayer?.bounds=self.bounds
+      self.layer.addSublayer(playerLayer!)
+      playerLayer!.frame=playerLayer!.bounds
+      print("AVLayerVideoGravity \(AVLayerVideoGravity.resizeAspectFill)")
+      self.isInitialized = true
     }
     
     override func willMove(toSuperview newSuperview: UIView?) {
@@ -543,5 +396,23 @@ class RNVideoPlayer: RCTView {
             }
         }
     }
+    /* @TODO: create Preview images before the next Release
+     func createPhantomGPUView() {
+     phantomGpuMovie = GPUImageMovie(playerItem: self.playerItem)
+     phantomGpuMovie.playAtActualSpeed = true
+     
+     let hueFilter = self.processingFilters.getFilterByName(name: "saturation")
+     phantomGpuMovie.addTarget(hueFilter)
+     phantomGpuMovie.startProcessing()
+     hueFilter?.addTarget(phantomFilterView)
+     hueFilter?.useNextFrameForImageCapture()
+     let CGImage = hueFilter?.newCGImageFromCurrentlyProcessedOutput()
+     print("CREATED: CGImage \(CGImage)")
+     if CGImage != nil {
+     print("CREATED: \(UIImage(cgImage: (CGImage?.takeUnretainedValue() )!))")
+     }
+     // let image = UIImage(cgImage: (hueFilter?.newCGImageFromCurrentlyProcessedOutput().takeRetainedValue())!)
+     
+     }
+     */
 }
-

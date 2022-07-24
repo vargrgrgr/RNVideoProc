@@ -7,5 +7,5 @@
 #define RNVideoProcessing_h
 
 #import "React/RCTView.h"
-
+#import <React/RCTLog.h>
 #endif /* RNVideoProcessing_h */

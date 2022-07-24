@@ -9,22 +9,21 @@ import Foundation
 //import GPUImage
 
 class VideoProcessingGPUFilters {
-  let filters = [
+  //let filters = []
 //    "saturation": GPUImageSaturationFilter(),
 //    "sepia": GPUImageSepiaFilter(),
 //    "pixelate": GPUImagePixellateFilter(),
 //    "hue": GPUImageHueFilter(),
 //    "vignette": GPUImageVignetteFilter(),
 //    "guassianBlur": GPUImageGaussianBlurFilter()
-  ]
 
   // TODO: add more filters
 
-  func getFilterByName(name: String) -> GPUImageFilter? {
-    return filters[name]
-  }
-
-  func getAllFilters() -> [String: GPUImageFilter] {
-    return filters
-  }
+//  func getFilterByName(name: String) -> GPUImageFilter? {
+//    return filters[name]
+//  }
+//
+//  func getAllFilters() -> [String: GPUImageFilter] {
+//    return filters
+// }
 }

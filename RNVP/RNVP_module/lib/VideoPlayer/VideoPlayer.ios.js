@@ -4,7 +4,9 @@ import { View, ViewPropTypes, requireNativeComponent, NativeModules, UIManager }
 import { getActualSource } from '../utils';
 const PLAYER_COMPONENT_NAME = 'RNVideoProcessing';
 
-//const ProcessingUI = UIManager.getViewManagerConfig('RNVideoProcessing');
+const { RNVideoTrimmer } = NativeModules;
+
+const ProcessingUI = UIManager.getViewManagerConfig('RNVideoProcessing');
 
 export class VideoPlayer extends Component {
   static propTypes = {
@@ -30,6 +32,7 @@ export class VideoPlayer extends Component {
     rotate: false,
     volume: 0.0,
     currentTime: 0,
+    resizeMode: ProcessingUI.Constants.ScaleNone,
     startTime: 0,
   };
   
@@ -46,7 +49,12 @@ export class VideoPlayer extends Component {
       QUALITY_3840x2160: '3840x2160', // available in iOS 9
       QUALITY_PASS_THROUGH: 'passthrough', // does not change quality
     },
-
+    resizeMode: {
+      CONTAIN: ProcessingUI.Constants.ScaleAspectFit,
+      COVER: ProcessingUI.Constants.ScaleAspectFill,
+      STRETCH: ProcessingUI.Constants.ScaleToFill,
+      NONE: ProcessingUI.Constants.ScaleNone
+    }
   };
 
   constructor(...args) {
@@ -58,7 +66,7 @@ export class VideoPlayer extends Component {
     this.getVideoInfo = this.getVideoInfo.bind(this);
     this._onChange = this._onChange.bind(this);
   }
-
+  
   // getPreviewForSecond(forSecond = 0, maximumSize, format = 'base64') {
   //   //const actualSource = getActualSource(this.props.source);
   //   return new Promise((resolve, reject) => {
@@ -75,7 +83,7 @@ export class VideoPlayer extends Component {
    getVideoInfo() {
     //const actualSource = getActualSource(this.props.source);
     return new Promise((resolve, reject) => {
-      RNVideoPlayer.getAssetInfo(this.props.source, (err, info) => {
+      RNVideoProc.getAssetInfo(this.props.source, (err, info) => {
         if (err) {
           return reject(err);
         }
@@ -92,7 +100,44 @@ export class VideoPlayer extends Component {
   }
 
   trim(options = {}) {
-    RNVideoPlayer.trim(this.props.source)
+    const availableQualities = Object.values(VideoPlayer.Constants.quality);
+    if (!options.hasOwnProperty('startTime')) {
+      // eslint-disable-next-line no-console
+      console.warn('Start time is not specified');
+    }
+    if (!options.hasOwnProperty('endTime')) {
+      // eslint-disable-next-line no-console
+      console.warn('End time is not specified');
+    }
+    if (options.hasOwnProperty('quality') && !availableQualities.includes(options.quality)) {
+      // eslint-disable-next-line no-console
+      console.warn('Quality is wrong, Please use VideoPlayer.Constants.quality');
+    }
+    const actualSource = getActualSource(this.props.source);
+    console.log("actualsource");
+    console.log(actualSource);  
+    return new Promise((resolve, reject) => {
+      console.log("trim native")
+      console.log(options)
+      RNVideoTrimmer.trim(actualSource, options, (err, output) => {
+        if (err) {
+          console.log(err)
+          return reject(err);
+        }
+        console.log("saved")
+        return resolve(output);
+      });
+      console.log("end")
+    });
+  }
+
+  ff_trim(source, startTime, endTime) {
+    console.log(source)
+    console.log("startTime")
+    console.log(startTime)
+    console.log("endTime")
+    console.log(startTime+5000)
+    RNVideoPlayer.ff_trim(source, startTime, startTime+5000)
     return;
   }
 
@@ -155,7 +200,7 @@ export class VideoPlayer extends Component {
 
     //const actualSource = getActualSource(source);
     return (
-      <RNVideoPlayer
+      <RNVideoProc  
         source={source}
         play={play}
         replay={replay}
@@ -175,4 +220,4 @@ export class VideoPlayer extends Component {
   }
 }
 
-const RNVideoPlayer = requireNativeComponent(PLAYER_COMPONENT_NAME, VideoPlayer);
+const RNVideoProc = requireNativeComponent(PLAYER_COMPONENT_NAME, VideoPlayer);

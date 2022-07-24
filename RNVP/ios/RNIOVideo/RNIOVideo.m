@@ -75,10 +75,10 @@
     const char *in_filename, *out_filename;
     int ret, i;
 
-
+  RCTLog(@"trim init");
   in_filename  = input;
   out_filename = output;
-
+  RCTLog(@"out_filename");
 
     if ((ret = avformat_open_input(&ifmt_ctx, in_filename, 0, 0)) < 0) {
         fprintf(stderr, "Could not open input file '%s'", in_filename);
@@ -143,6 +143,7 @@
   
   size_t filesize;
   size_t packetsize;
+  RCTLog(@"decode-encode");
     while (1) {
         AVStream *in_stream, *out_stream;
 
@@ -164,16 +165,16 @@
         read_packet.duration = (int)av_rescale_q(read_packet.duration, in_stream->time_base, out_stream->time_base);
         read_packet.pos = -1;
         
-      if(read_packet.duration >=startT && read_packet.duration < endT){
+     // if(read_packet.duration >=startT && read_packet.duration < endT){
         ret = av_interleaved_write_frame(ofmt_ctx, &read_packet);
           if (ret < 0) {
               fprintf(stderr, "Error muxing packet\n");
               break;
           }
-      }
-      else{
+     // }
+     // else{
           break;
-}
+//}
         av_free_packet(&read_packet);
         av_free_packet(&pkt);
     }
