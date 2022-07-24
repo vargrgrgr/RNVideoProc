@@ -23,6 +23,7 @@ export class VideoPlayer extends Component {
     onChange: PropTypes.func,
     resizeMode: PropTypes.string,
     FilterUI: PropTypes.bool,
+    TrimmerUI: PropTypes.bool,
     ...ViewPropTypes
   };
 
@@ -125,7 +126,7 @@ export class VideoPlayer extends Component {
           return reject(err);
         }
         console.log("saved")
-        this.props.source=output;
+        console.log(output)
         return resolve(output);
       });
       console.log("end")

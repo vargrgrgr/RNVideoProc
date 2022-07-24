@@ -31,12 +31,23 @@ const initialTrimUnitSize = 5000;
     totalDuration: initialTotalDuration,
     TrimUnitSize: initialTrimUnitSize,
     trimFix: true,
-    FilterUI: false
+    FilterUI: false,
+    TrimmerUI: false
   }
 
-
+  trimUI= () => {
+    this.setState({TrimmerUI: true})
+  }
   filterUI= () => {
-    setstate({FilterUI: true})
+    this.setState({FilterUI: true})
+  }
+
+  TrimmedVideoView = (source) => {
+    console.log('source');
+    console.log(source);
+    if(source != null){
+      //this.props.navigation.push('VideoProc', {local_path: source, video_length: 5});
+    }
   }
 
   playScrubber = () => {
@@ -81,7 +92,7 @@ const initialTrimUnitSize = 5000;
     };
     console.log("trim");
     this.videoPlayerRef.trim(options)
-      .then((newSource) => console.log(newSource))
+      .then((newSource) => this.TrimmedVideoView(newSource))
       .catch(console.warn);
   //this.videoPlayerRef.trim(this.state.videoSource, this.state.trimmerLeftHandlePosition, this.state.trimmerRighttHandlePosition)
   }
@@ -174,6 +185,7 @@ const initialTrimUnitSize = 5000;
       startT,
       trimfix,
       FilterUI,
+      TrimmerUI,
     } = this.state;
 
   
@@ -194,7 +206,7 @@ const initialTrimUnitSize = 5000;
             />
           </View>
           <View style={styles.buttonsview}>
-            <View style={styles.button}>
+            <View style={styles.l_button}>
             {
               FilterUI?
               <Button title="Filter" color="#f638dc" onPress={(this.filterUI)}/> : 
@@ -208,14 +220,18 @@ const initialTrimUnitSize = 5000;
               <Button title="Play" color="#f638dc" onPress={this.playScrubber}/>
             }
             </View>
-            <View style={styles.button}>
+            <View style={styles.l_button}>
             {
-              <Button title="Trim" color="#f638dc" onPress={this.trimVideo}/>
+              TrimmerUI?
+              <Button title="Trim" color="#f638dc" onPress={this.trimVideo}/>:
+              <Button title="Trimmer" color="#f638dc" onPress={this.trimUI}/>
             }
             </View>
           
           </View>
           <View style={styles.trimmer}>
+            {
+            TrimmerUI?
             <Trimmer
             onHandleChange= {this.onHandleChange}
             totalDuration={videoLength}
@@ -237,7 +253,9 @@ const initialTrimUnitSize = 5000;
             onLeftHandlePressIn={() => console.log('LeftHandlePressIn')}
             onRightHandlePressIn={() => console.log('RightHandlePressIn')}
             onScrubberPressIn={() => console.log('onScrubberPressIn')}
-            />
+            />:
+            <View></View>
+            }
           </View>
       </View>        
       );
@@ -266,6 +284,13 @@ const styles = StyleSheet.create({
     },
     button:{
       width:65,
+      height:40,
+      opacity: 50,
+      borderRadius: 15,
+      backgroundColor:'white'
+    },
+    l_button:{
+      width:120,
       height:40,
       opacity: 50,
       borderRadius: 15,

@@ -188,9 +188,9 @@ class RNVideoTrimmer: NSObject {
       }
 
       let quality = ((options.object(forKey: "quality") as? String) != nil) ? options.object(forKey: "quality") as! String : ""
-      let saveToCameraRoll = options.object(forKey: "saveToCameraRoll") as? Bool ?? false
+      let saveToCameraRoll = false
       let saveWithCurrentDate = options.object(forKey: "saveWithCurrentDate") as? Bool ?? false
-
+      
       let manager = FileManager.default
       guard let documentDirectory = try? manager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
           else {
@@ -297,7 +297,7 @@ class RNVideoTrimmer: NSObject {
                 if saveToCameraRoll {
                     UISaveVideoAtPathToSavedPhotosAlbum(outputURL.relativePath, self, nil, nil)
                 }
-                self.doubletrim(outputURL.absoluteString, duration:t_duration, endtime:endTime);
+              self.doubletrim(outputURL.absoluteString, duration:t_duration, endtime:endTime)
                 callback( [NSNull(), outputURL.absoluteString] )
 
 //            case .failed:
@@ -374,7 +374,7 @@ class RNVideoTrimmer: NSObject {
         do {
             try manager.createDirectory(at: outputURL, withIntermediateDirectories: true, attributes: nil)
             let name = self.randomString()
-            outputURL = outputURL.appendingPathComponent("\(name)2.mp4")
+            outputURL = outputURL.appendingPathComponent("\(name).mp4")
         } catch {
             
             print(error)
@@ -412,10 +412,10 @@ class RNVideoTrimmer: NSObject {
         exportSession.exportAsynchronously{
             switch exportSession.status {
             case .completed:
-                
                 if saveToCameraRoll {
                     UISaveVideoAtPathToSavedPhotosAlbum(outputURL.relativePath, self, nil, nil)
                 }
+              _ = try? manager.removeItem(at: sourceURL)
 
 //            case .failed:
 //                callback( ["Failed: \(exportSession.error)", NSNull()] )
@@ -426,8 +426,7 @@ class RNVideoTrimmer: NSObject {
             default: break
             }
         }
-        
-        _ = try? manager.removeItem(at: sourceURL)	
+
       }
   }
   
