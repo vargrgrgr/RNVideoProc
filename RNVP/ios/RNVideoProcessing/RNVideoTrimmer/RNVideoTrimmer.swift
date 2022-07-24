@@ -298,7 +298,8 @@ class RNVideoTrimmer: NSObject {
                     UISaveVideoAtPathToSavedPhotosAlbum(outputURL.relativePath, self, nil, nil)
                 }
               self.doubletrim(outputURL.absoluteString, duration:t_duration, endtime:endTime)
-                callback( [NSNull(), outputURL.absoluteString] )
+               callback( [outputURL.absoluteString, NSd                                                                        Null()] )
+              
 
 //            case .failed:
 //                callback( ["Failed: \(exportSession.error)", NSNull()] )
@@ -312,7 +313,7 @@ class RNVideoTrimmer: NSObject {
       }
   }
 
-  func doubletrim(_ source: String, duration: CMTime, endtime: CMTime) {
+  func doubletrim(_ source: String, duration: CMTime, endtime: CMTime) -> String {
 
 
 
@@ -324,7 +325,7 @@ class RNVideoTrimmer: NSObject {
       guard let documentDirectory = try? manager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
           else {
               
-              return
+        return "aaa"
       }
 
       let sourceURL = getSourceURL(source: source)
@@ -367,7 +368,7 @@ class RNVideoTrimmer: NSObject {
         } catch {
           
           // Error handling code here
-          return
+          return "aaa"
         }
 
         var outputURL = documentDirectory.appendingPathComponent("output")
@@ -381,6 +382,7 @@ class RNVideoTrimmer: NSObject {
         }
 
         //Remove existing file
+        _ = try? manager.removeItem(at: sourceURL)
         _ = try? manager.removeItem(at: outputURL)
 
         let finalComposition = composition.copy() as! AVComposition
@@ -391,7 +393,7 @@ class RNVideoTrimmer: NSObject {
         guard let exportSession = AVAssetExportSession(asset: finalComposition, presetName: useQuality)
             else {
                 
-                return
+          return "aaa"
         }
         exportSession.outputURL = NSURL.fileURL(withPath: outputURL.path)
         exportSession.outputFileType = .mp4
@@ -406,16 +408,18 @@ class RNVideoTrimmer: NSObject {
         }
 
 
-
+        var ret = "aaa"
         exportSession.timeRange = timeRange
-
+      
         exportSession.exportAsynchronously{
             switch exportSession.status {
             case .completed:
                 if saveToCameraRoll {
-                    UISaveVideoAtPathToSavedPhotosAlbum(outputURL.relativePath, self, nil, nil)
+                  UISaveVideoAtPathToSavedPhotosAlbum(outputURL.absoluteString, self, nil, nil)
+                  ret = outputURL.absoluteString
+                  return ret
                 }
-              _ = try? manager.removeItem(at: sourceURL)
+
 
 //            case .failed:
 //                callback( ["Failed: \(exportSession.error)", NSNull()] )
@@ -426,8 +430,10 @@ class RNVideoTrimmer: NSObject {
             default: break
             }
         }
+        
 
       }
+    return "aaa"
   }
   
   
