@@ -5,7 +5,7 @@ platform :ios, '11.0'
 
 target 'aaa' do
   config = use_native_modules!
-
+  pod 'RNFS', :path => '../node_modules/react-native-fs'
   use_react_native!(
     :path => config[:reactNativePath],
     # to enable hermes on iOS, change `false` to `true` and then install pods
@@ -16,7 +16,6 @@ target 'aaa' do
     inherit! :complete
     # Pods for testing
   end
-  pod 'RNFS', :path => '../node_modules/react-native-fs'
   # Enables Flipper.
   #
   # Note that if you have use_frameworks! enabled, Flipper will not work and
