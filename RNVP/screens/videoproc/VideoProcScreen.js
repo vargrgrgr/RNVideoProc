@@ -43,13 +43,13 @@ const initialTrimUnitSize = 5000;
   }
 
   TrimmedVideoView = (source) => {
-    var RNFS = require('react-native-fs');
-    let exists = await RNFS.exists(source);
+    //var RNFS = require('react-native-fs');
+   // let exists = await RNFS.exists(source);
     console.log('source');
     console.log(source);
-    if(exists){
+    //if(exists){
       //this.props.navigation.push('VideoProc', {local_path: source, video_length: 5});
-    }
+    //}
   }
 
   playScrubber = () => {

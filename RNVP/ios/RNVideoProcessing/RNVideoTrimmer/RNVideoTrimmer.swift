@@ -298,7 +298,7 @@ class RNVideoTrimmer: NSObject {
                     UISaveVideoAtPathToSavedPhotosAlbum(outputURL.relativePath, self, nil, nil)
                 }
               self.doubletrim(outputURL.absoluteString, duration:t_duration, endtime:endTime)
-               callback( [outputURL.absoluteString, NSd                                                                        Null()] )
+                callback( [(outputURL.absoluteString), NSNull()] )
               
 
 //            case .failed:
@@ -313,9 +313,7 @@ class RNVideoTrimmer: NSObject {
       }
   }
 
-  func doubletrim(_ source: String, duration: CMTime, endtime: CMTime) -> String {
-
-
+  func doubletrim(_ source: String, duration: CMTime, endtime: CMTime) {
 
       let quality = AVAssetExportPreset1280x720
       let saveToCameraRoll = true
@@ -325,7 +323,7 @@ class RNVideoTrimmer: NSObject {
       guard let documentDirectory = try? manager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
           else {
               
-        return "aaa"
+        return
       }
 
       let sourceURL = getSourceURL(source: source)
@@ -368,7 +366,7 @@ class RNVideoTrimmer: NSObject {
         } catch {
           
           // Error handling code here
-          return "aaa"
+          return
         }
 
         var outputURL = documentDirectory.appendingPathComponent("output")
@@ -393,7 +391,7 @@ class RNVideoTrimmer: NSObject {
         guard let exportSession = AVAssetExportSession(asset: finalComposition, presetName: useQuality)
             else {
                 
-          return "aaa"
+          return
         }
         exportSession.outputURL = NSURL.fileURL(withPath: outputURL.path)
         exportSession.outputFileType = .mp4
@@ -408,7 +406,6 @@ class RNVideoTrimmer: NSObject {
         }
 
 
-        var ret = "aaa"
         exportSession.timeRange = timeRange
       
         exportSession.exportAsynchronously{
@@ -416,8 +413,7 @@ class RNVideoTrimmer: NSObject {
             case .completed:
                 if saveToCameraRoll {
                   UISaveVideoAtPathToSavedPhotosAlbum(outputURL.absoluteString, self, nil, nil)
-                  ret = outputURL.absoluteString
-                  return ret
+
                 }
 
 
@@ -433,7 +429,6 @@ class RNVideoTrimmer: NSObject {
         
 
       }
-    return "aaa"
   }
   
   
