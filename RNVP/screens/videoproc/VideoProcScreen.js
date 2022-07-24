@@ -4,7 +4,6 @@ import {
 } from 'react-native';
 import {VideoPlayer} from '../../RNVP_module';
 import Trimmer from '../../react-native-trimmer'
-import { forHorizontalIOS } from '@react-navigation/stack/lib/typescript/src/TransitionConfigs/CardStyleInterpolators';
 
 const maxTrimDuration = 60000;
 const minimumTrimDuration = 1000;
@@ -31,7 +30,13 @@ const initialTrimUnitSize = 5000;
     rightnumber: 10000,
     totalDuration: initialTotalDuration,
     TrimUnitSize: initialTrimUnitSize,
-    trimFix: true
+    trimFix: true,
+    FilterUI: false
+  }
+
+
+  filterUI= () => {
+    setstate({FilterUI: true})
   }
 
   playScrubber = () => {
@@ -48,9 +53,9 @@ const initialTrimUnitSize = 5000;
       //   this.setState({ scrubberPosition: this.state.trimmerLeftHandlePosition });
       // }
       this.setState({ scrubberPosition: this.state.scrubberPosition + scrubInterval})
-      this.setState({currentT: this.state.scrubberPosition/1000})
-      if(this.state.scrubberPosition+ scrubInterval>this.state.trimmerRightHandlePosition){
-        this.setState({ scrubberPosition: this.state.trimmerLeftHandlePosition})
+      this.setState({currentT: this.state.scrubberPosition/1000+1})
+      if(this.state.scrubberPosition+ scrubInterval>this.state.trimmerRightHandlePosition-1000){
+        this.setState({ scrubberPosition: this.state.trimmerLeftHandlePosition-1000})
 
       }
     }, scrubInterval)
@@ -58,7 +63,7 @@ const initialTrimUnitSize = 5000;
 
   pauseScrubber = () => {
     clearInterval(this.scrubberInterval)
-    this.setState({ playing: false, scrubberPosition: this.state.trimmerLeftHandlePosition});
+    this.setState({ playing: false, scrubberPosition: this.state.trimmerLeftHandlePosition-1000});
   }
 
   onScrubbingComplete = (newValue) => {
@@ -66,11 +71,10 @@ const initialTrimUnitSize = 5000;
   }
   //----------------
   trimVideo = () => {
-    this.forceUpdate();
-    console.log("forceUpdate")
+    console.log((Math.round(this.state.currentT)));
     const options = {
-      startTime: this.state.scrubberPosition/1000,
-      endTime: this.state.scrubberPosition/1000+5,
+      startTime: (Math.round(this.state.trimmerLeftHandlePosition/1000)),
+      endTime: (Math.round(this.state.trimmerLeftHandlePosition/1000))+5,
       quality: VideoPlayer.Constants.quality.QUALITY_1280x720, // iOS only
       saveToCameraRoll: true, // default is false // iOS only
       saveWithCurrentDate: false, // default is false // iOS only
@@ -100,14 +104,15 @@ const initialTrimUnitSize = 5000;
       .catch(console.warn);
   }
   onHandleChange = ({ leftPosition, rightPosition }) => {
-    //if(this.state.trimFix==true){
-      //this.fixTrimHandle(leftPosition, rightPosition);
-    //}else{
+    if(this.state.trimFix==true){
+      this.fixTrimHandle(leftPosition, rightPosition);
+    }else{
       this.setState({ trimmerRightHandlePosition: rightPosition });
       this.setState({ trimmerLeftHandlePosition: leftPosition });
       
       
-    //}
+    }
+    this.pauseScrubber();
     this.setState({startT: this.state.trimmerLeftHandlePosition/1000});
     this.setState({currentT: this.state.trimmerLeftHandlePosition/1000});
   }
@@ -139,8 +144,8 @@ const initialTrimUnitSize = 5000;
       }
     // }
     this.setState({ scrubberPosition: this.state.trimmerLeftHandlePosition });
-    this.setState({startT: this.state.scrubberPosition/1000});
-    this.setState({currentT: this.state.scrubberPosition/1000});
+    this.setState({startT: this.state.scrubberPosition/1000+1});
+    this.setState({currentT: this.state.scrubberPosition/1000+1});
   } 
   // onChanged (text) {
   //   this.setState({
@@ -168,6 +173,7 @@ const initialTrimUnitSize = 5000;
       videoLength,
       startT,
       trimfix,
+      FilterUI,
     } = this.state;
 
   
@@ -177,7 +183,7 @@ const initialTrimUnitSize = 5000;
             <VideoPlayer
               ref={ref => this.videoPlayerRef = ref}
               startTime={startT}  // seconds
-              play={playing}     // default false
+              play={false}     // default false
               replay={false}   // should player play video again if it's ended
               rotate={false}   // use this prop to rotate video if it captured in landscape mode iOS only
               background_Color={'Black'}
@@ -190,13 +196,15 @@ const initialTrimUnitSize = 5000;
           <View style={styles.buttonsview}>
             <View style={styles.button}>
             {
-              <Button title="Filter" color="#f638dc" onPress={this.ff_trimVideo}/>
+              FilterUI?
+              <Button title="Filter" color="#f638dc" onPress={(this.filterUI)}/> : 
+              <Button title="Filter" color="#f638dc" />
             }
             </View>
             <View style={styles.button}>
             {
               playing? 
-              <Button title="Pause" color="#f638dc" onPress={this.pauseScrubber}/> : 
+              <Button title="Pause" color="#f638dc" opacity={0.5} onPress={this.pauseScrubber}/> : 
               <Button title="Play" color="#f638dc" onPress={this.playScrubber}/>
             }
             </View>

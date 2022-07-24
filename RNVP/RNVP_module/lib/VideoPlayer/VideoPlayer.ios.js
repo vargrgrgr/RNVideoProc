@@ -22,6 +22,7 @@ export class VideoPlayer extends Component {
     playerHeight: PropTypes.number,
     onChange: PropTypes.func,
     resizeMode: PropTypes.string,
+    FilterUI: PropTypes.bool,
     ...ViewPropTypes
   };
 
@@ -124,6 +125,7 @@ export class VideoPlayer extends Component {
           return reject(err);
         }
         console.log("saved")
+        this.props.source=output;
         return resolve(output);
       });
       console.log("end")

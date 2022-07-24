@@ -209,6 +209,7 @@ export default class Trimmer extends React.Component {
       console.log(this.state.trimmingRightHandleValue)
       this.setState({ trimming: false,  panResponderEnabled: true, })
       console.log(this.state.trimmingRightHandleValue)
+      this.render()
     },
     onPanResponderTerminationRequest: (evt, gestureState) => true,
     onShouldBlockNativeResponder: (evt, gestureState) => true
@@ -586,7 +587,9 @@ const styles = StyleSheet.create({
     height: 140,
   },
   horizontalScrollView: {
+    flexDirection: 'column',
     height: 140,
+    left: 20,
     overflow: 'hidden',
     position: 'relative',
   },
@@ -602,7 +605,7 @@ const styles = StyleSheet.create({
   },
   trimmer: {
     position: 'absolute',
-    left: TRACK_PADDING_OFFSET,
+    left: TRACK_PADDING_OFFSET+20,
     top: 37,
     borderColor: TINT_COLOR,
     borderWidth: 3,
@@ -623,7 +626,6 @@ const styles = StyleSheet.create({
   rightHandle: {
     borderTopRightRadius: 10,
     borderBottomRightRadius: 10,
-    right: 120,
   },
   selection: {
     opacity: 0.2,

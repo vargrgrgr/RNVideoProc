@@ -345,7 +345,6 @@ class RNVideoPlayer: RCTView {
     func onVideoCurrentTimeChange(currentTime: CGFloat) {
         if self.onChange != nil {
             let event = ["currentTime": currentTime]
-          self.forceRedraw()
             self.onChange!(event)
         }
     }
